@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book</title>
+<style>
+  :root{ --ink:#12151a; --ink-2:#191d24; --brass:#c6a15b; --brass-bright:#ddb96e; --cream:#f2ede1; --ash:#9199a8; --line:rgba(237,231,216,0.12); }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; height:100%; }
+  body{
+    background: radial-gradient(1100px 600px at 12% -10%, rgba(198,161,91,0.08), transparent 60%), var(--ink);
+    color: var(--cream);
+    font-family: -apple-system, 'Inter', sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; padding:24px;
+  }
+  .card{ max-width:360px; width:100%; text-align:center; }
+  h1{ font-size:30px; margin:0 0 6px; letter-spacing:-0.01em; }
+  p{ color:var(--ash); font-size:13px; margin:0 0 28px; }
+  .picks{ display:flex; flex-direction:column; gap:12px; }
+  .pick{
+    display:block; padding:16px; border-radius:10px; background:var(--ink-2);
+    border:1px solid var(--line); color:var(--cream); text-decoration:none;
+    font-weight:600; font-size:15px; transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .pick:hover{ border-color:var(--brass); background:#222834; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Book</h1>
+    <p>Choose your name, then add it to your home screen from your browser's share menu.</p>
+    <div class="picks">
+      <a class="pick" href="./p1/">Player 1</a>
+      <a class="pick" href="./p2/">Player 2</a>
+      <a class="pick" href="./p3/">Player 3</a>
+      <a class="pick" href="./p4/">Player 4</a>
+    </div>
+  </div>
+</body>
+</html>

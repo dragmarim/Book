@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book — Player 1</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#12151a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Book P1">
+<link rel="apple-touch-icon" href="../icons/icon-180-p1.png">
+<link rel="icon" href="../icons/icon-192-p1.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #12151a;
+    --ink-2: #191d24;
+    --ink-3: #1f242d;
+    --line: rgba(237,231,216,0.09);
+    --line-strong: rgba(237,231,216,0.16);
+    --parchment: #ede7d8;
+    --parchment-dim: #d9d2bd;
+    --paper-text: #1d1912;
+    --paper-text-dim: #5c5540;
+    --brass: #c6a15b;
+    --brass-bright: #ddb96e;
+    --teal: #5b9c8f;
+    --teal-bright: #74b7a9;
+    --ash: #9199a8;
+    --ash-dim: #626a78;
+    --cream: #f2ede1;
+    --error: #d0564a;
+    --error-glow: rgba(208,86,74,0.25);
+    --success: #6fae7f;
+    --leather: #a5713f;
+    --leather-bright: #c08a52;
+    --violet: #7c5cb8;
+    --violet-bright: #9575d1;
+    --violet-glow: rgba(124,92,184,0.3);
+    --gold: #e0b64a;
+    --gold-bright: #f0cc6e;
+    --gold-glow: rgba(224,182,74,0.25);
+    --sky: #5b8fc7;
+    --sky-bright: #78a8dc;
+    --sky-glow: rgba(91,143,199,0.28);
+    --radius: 10px;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(1100px 600px at 12% -10%, rgba(198,161,91,0.07), transparent 60%),
+      radial-gradient(900px 500px at 90% 0%, rgba(91,156,143,0.06), transparent 55%),
+      var(--ink);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  .app{ max-width: 1280px; margin: 0 auto; padding: 36px 28px 80px; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    display:flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 22px;
+    margin-bottom: 30px;
+  }
+  .brand-mark{
+    display:flex;
+    align-items:baseline;
+    gap: 14px;
+  }
+  .brand-mark .seal{
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--brass);
+    display:flex; align-items:center; justify-content:center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--brass-bright);
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    transform: translateY(4px);
+  }
+  h1{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 38px);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .tagline{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ash);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .import-block{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+  }
+  .store-count{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ash);
+    text-align: right;
+    line-height: 1.5;
+  }
+  .store-count strong{
+    color: var(--cream);
+    font-size: 16px;
+    display:block;
+    font-weight: 600;
+  }
+  .save-status{
+    font-size: 10.5px;
+    color: var(--ash-dim);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+  .save-status.err{ color: var(--error); }
+
+  /* ---------- Tabs ---------- */
+  .tab-bar{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .tab-btn{
+    display:flex;
+    align-items:center;
+    gap: 9px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ash);
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 18px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .tab-btn .dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ash-dim);
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+  }
+  .tab-btn .tab-count{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ash-dim);
+  }
+  .tab-btn:hover{ color: var(--cream); border-color: var(--line-strong); }
+  .tab-btn.active{
+    background: var(--ink-3);
+    color: var(--cream);
+    border-color: var(--line-strong);
+  }
+  .tab-btn[data-tab="specified"].active .dot{ background: var(--brass); }
+  .tab-btn[data-tab="specified"].active{ box-shadow: inset 0 -2px 0 var(--brass); }
+  .tab-btn[data-tab="free"].active .dot{ background: var(--teal); }
+  .tab-btn[data-tab="free"].active{ box-shadow: inset 0 -2px 0 var(--teal); }
+  .tab-btn[data-tab="jenny"].active .dot{ background: var(--gold); }
+  .tab-btn[data-tab="jenny"].active{ box-shadow: inset 0 -2px 0 var(--gold); }
+  .tab-btn[data-tab="random-items"].active .dot{ background: var(--violet); }
+  .tab-btn[data-tab="random-items"].active{ box-shadow: inset 0 -2px 0 var(--violet); }
+  .tab-btn[data-tab="wands"].active .dot{ background: var(--leather); }
+  .tab-btn[data-tab="wands"].active{ box-shadow: inset 0 -2px 0 var(--leather); }
+  .tab-btn.tab-jenny{ font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.02em; }
+
+  /* ---------- Boards ---------- */
+  .boards{ display:block; }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .panel{
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .panel-sub{
+    font-size: 12px;
+    color: var(--ash-dim);
+    margin: -12px 0 18px;
+  }
+
+  .pack-controls{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pack-controls:empty{ display:none; }
+  .pack-controls:not(:empty){ margin-bottom: 18px; }
+  .pack-btn{
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .pack-btn:active{ transform: translateY(1px); }
+  .pack-btn.backpack{ background: var(--leather); box-shadow: 0 6px 16px rgba(165,113,63,0.28); }
+  .pack-btn.backpack:hover{ background: var(--leather-bright); }
+  .pack-btn.enchanted{ background: var(--violet); box-shadow: 0 6px 16px var(--violet-glow); }
+  .pack-btn.enchanted:hover{ background: var(--violet-bright); }
+
+  .slot-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 1080px){
+    .slot-grid{ grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 820px){
+    .slot-grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px){
+    .slot-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .wand-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 1080px){
+    .wand-grid{ grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 820px){
+    .wand-grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px){
+    .wand-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- Slot: empty state ---------- */
+  .slot{
+    position: relative;
+    border-radius: var(--radius);
+    min-height: 168px;
+    display:flex;
+    flex-direction: column;
+  }
+  .slot.is-empty{
+    background: var(--ink-3);
+    border: 1.5px dashed var(--line-strong);
+    padding: 12px;
+    justify-content: center;
+  }
+  #panel-free .slot.is-empty{
+    justify-content: space-between;
+  }
+  .slot.is-empty:hover{ border-color: var(--line-strong); background: #222834; }
+
+  .slot-empty-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ash-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin: 10px 0;
+    display:block;
+  }
+
+  .slot-badge{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--brass);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-weight: 600;
+    position: absolute;
+    top: -9px; left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 0 3px var(--ink-2);
+  }
+  .slot-controls{
+    display:flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .slot-input{
+    width: 100%;
+    background: var(--ink);
+    border: 1px solid var(--line-strong);
+    color: var(--cream);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 8px 9px;
+    border-radius: 6px;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .slot-input::placeholder{ color: var(--ash-dim); }
+  .slot-input:focus{ border-color: var(--brass); }
+  .slot-input::-webkit-outer-spin-button,
+  .slot-input::-webkit-inner-spin-button{ -webkit-appearance: none; margin:0; }
+
+  .add-btn{
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: var(--brass);
+    color: var(--ink);
+    transition: background 0.15s ease, opacity 0.15s ease;
+  }
+  #panel-free .add-btn{ background: var(--teal); }
+  .add-btn:hover:not(:disabled){ filter: brightness(1.1); }
+  .add-btn:disabled{
+    background: var(--ink);
+    color: var(--ash-dim);
+    cursor: not-allowed;
+    border: 1px solid var(--line);
+  }
+
+  /* ---------- Slot: occupied (card) state ---------- */
+  .slot.is-filled{
+    background: linear-gradient(180deg, var(--parchment), var(--parchment-dim));
+    color: var(--paper-text);
+    padding: 12px 12px 10px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.28);
+    animation: cardIn 0.22s ease;
+  }
+  @keyframes cardIn{
+    from{ opacity: 0; transform: scale(0.94) translateY(3px); }
+    to{ opacity: 1; transform: none; }
+  }
+  .slot.is-filled::before{
+    content: "";
+    position: absolute;
+    top: 9px; left: 50%;
+    transform: translateX(-50%);
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--ink-2);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+  }
+  .card-remove{
+    position: absolute;
+    top: -9px; right: -9px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--error);
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 0 0 3px var(--ink-2);
+  }
+  .card-remove:hover{ filter: brightness(1.1); }
+
+  .tower-badge{
+    position: absolute;
+    top: -9px; left: -9px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(160deg, #a49a8a, #6f665a);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 0 0 3px var(--ink-2), 0 2px 5px rgba(0,0,0,0.35);
+    z-index: 2;
+    color: #efe8d9;
+  }
+  .tower-badge svg{ display:block; }
+  .choose-plus-btn{
+    position: absolute;
+    bottom: -9px; left: -9px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--success);
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    line-height: 1;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 0 0 3px var(--ink-2);
+    z-index: 2;
+  }
+  .choose-plus-btn:hover{ filter: brightness(1.1); }
+  .choose-plus-btn.selected{
+    background: var(--teal);
+    cursor: default;
+  }
+  .card-ability-row{
+    margin-top: 8px;
+    display:flex;
+    justify-content:center;
+  }
+  .ability-btn{
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background: var(--violet);
+  }
+  .ability-btn:hover{ filter: brightness(1.1); }
+  .ability-btn.cancel{ background: var(--error); }
+  .ability-btn.use-wand{ background: var(--leather); }
+
+  .wand-charges-row{
+    margin-top: 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 9px;
+  }
+  .wand-charge-btn{
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(29,25,18,0.1);
+    color: var(--paper-text);
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background 0.15s ease, opacity 0.15s ease;
+  }
+  .wand-charge-btn:hover:not(:disabled){ background: rgba(29,25,18,0.18); }
+  .wand-charge-btn:disabled{ opacity: 0.32; cursor: not-allowed; }
+  .wand-charge-count{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--paper-text-dim);
+    min-width: 64px;
+    text-align: center;
+  }
+
+  .card-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .card-number-tag{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--paper-text-dim);
+    letter-spacing: 0.04em;
+  }
+  .rank-chip{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(29,25,18,0.1);
+    color: var(--paper-text-dim);
+    border: 1px solid rgba(29,25,18,0.14);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .rank-chip.r-c{ background: rgba(107,142,107,0.18); color: #3c5c3c; border-color: rgba(60,92,60,0.25); }
+  .rank-chip.r-b{ background: rgba(91,156,143,0.2); color: #2e5951; border-color: rgba(46,89,81,0.25); }
+  .rank-chip.r-a{ background: rgba(198,161,91,0.25); color: #7a5c22; border-color: rgba(122,92,34,0.25); }
+  .rank-chip.r-s{ background: rgba(193,80,46,0.22); color: #8a3a1e; border-color: rgba(138,58,30,0.25); }
+  .rank-chip.r-ss{ background: rgba(138,45,45,0.24); color: #7a1f1f; border-color: rgba(122,31,31,0.3); }
+  .card-limit{
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--error);
+    margin: 6px 0 0;
+  }
+  .card-name{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 15.5px;
+    line-height: 1.2;
+    margin: 8px 0 6px;
+    word-break: break-word;
+  }
+  .card-meta{
+    display:flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+  }
+  .card-chip{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(29,25,18,0.08);
+    color: var(--paper-text-dim);
+    border: 1px solid rgba(29,25,18,0.12);
+  }
+  .card-desc{
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: var(--paper-text-dim);
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 2px;
+  }
+  .card-desc::-webkit-scrollbar{ width: 4px; }
+  .card-desc::-webkit-scrollbar-thumb{ background: rgba(29,25,18,0.2); border-radius: 4px; }
+
+  .card-value{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .coin{
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f3d98a, var(--brass) 65%, #8a6a2e 100%);
+    border: 1px solid #8a6a2e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 800;
+    color: #5b4008;
+    flex-shrink: 0;
+  }
+  .coin.coin-lg{
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+  .card-value .value-num{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--paper-text);
+  }
+
+  /* ---------- Spell cards (Free Slots, № 1001–2000, Type Spell/Attack Spell) ---------- */
+  .slot.is-filled.type-spell{
+    background: linear-gradient(180deg, #2c4a63, #1f3546);
+    color: #dce8f0;
+  }
+  .slot.is-filled.type-spell .card-number-tag{ color: #a9c2d3; }
+  .slot.is-filled.type-spell .card-desc{ color: #b9cedb; }
+  .slot.is-filled.type-spell .card-chip{
+    background: rgba(255,255,255,0.12);
+    color: #dce8f0;
+    border: 1px solid rgba(255,255,255,0.22);
+  }
+  .slot.is-filled.type-spell .card-value .value-num{ color: #dce8f0; }
+  .slot.is-filled.type-spell .rank-chip.r-c{ background: rgba(122,196,122,0.35); color: #d8f3d8; border-color: rgba(180,230,180,0.45); }
+  .slot.is-filled.type-spell .rank-chip.r-b{ background: rgba(116,183,169,0.38); color: #d9f4ee; border-color: rgba(170,230,215,0.45); }
+  .slot.is-filled.type-spell .rank-chip.r-a{ background: rgba(221,185,110,0.4); color: #fbecc9; border-color: rgba(240,214,155,0.5); }
+  .slot.is-filled.type-spell .rank-chip.r-s{ background: rgba(224,120,80,0.42); color: #ffe3d5; border-color: rgba(255,185,155,0.5); }
+  .slot.is-filled.type-spell .rank-chip.r-ss{ background: rgba(220,90,90,0.45); color: #ffdcdc; border-color: rgba(255,165,165,0.5); }
+
+  /* ---------- Jenny panel ---------- */
+  .jenny-balance{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .jenny-balance #jenny-balance-text{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold-bright);
+    letter-spacing: 0.01em;
+  }
+  .jenny-controls{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+  }
+  .jenny-input{
+    background: var(--ink-3);
+    border: 1px solid var(--line-strong);
+    color: var(--cream);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    padding: 11px 13px;
+    border-radius: 7px;
+    outline: none;
+    width: 160px;
+    -moz-appearance: textfield;
+  }
+  .jenny-input::placeholder{ color: var(--ash-dim); }
+  .jenny-input:focus{ border-color: var(--gold); }
+  .jenny-input::-webkit-outer-spin-button,
+  .jenny-input::-webkit-inner-spin-button{ -webkit-appearance: none; margin:0; }
+  .jenny-btn{
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 11px 20px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    transition: filter 0.15s ease, opacity 0.15s ease;
+  }
+  .jenny-btn:hover:not(:disabled){ filter: brightness(1.1); }
+  .jenny-btn:disabled{
+    background: var(--ink-3);
+    color: var(--ash-dim);
+    cursor: not-allowed;
+    border: 1px solid var(--line);
+  }
+  .jenny-btn.add{ background: var(--success); }
+  .jenny-btn.lose{ background: var(--error); }
+  .history-row.increased .history-tag{ background: rgba(111,174,127,0.18); color: var(--success); border: 1px solid rgba(111,174,127,0.3); }
+  .history-row.decreased .history-tag{ background: rgba(208,86,74,0.16); color: var(--error); border: 1px solid rgba(208,86,74,0.3); }
+
+  /* ---------- Jenny panel: Card Rewards ---------- */
+  .jenny-rewards{
+    margin-bottom: 26px;
+  }
+  .jenny-rewards-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ash-dim);
+    margin-bottom: 10px;
+  }
+  .jenny-rewards-buttons{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .reward-btn{
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 11px 18px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    color: var(--cream);
+    background: var(--ink-3);
+    border: 1.5px solid var(--line-strong);
+    transition: filter 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .reward-btn:hover{ border-color: var(--ash); background: #262c37; }
+  .reward-btn.rare{
+    background: var(--sky);
+    border: none;
+    color: #fff;
+    box-shadow: 0 8px 20px var(--sky-glow);
+  }
+  .reward-btn.rare:hover{ background: var(--sky-bright); }
+  .reward-btn.spellpack{
+    background: linear-gradient(135deg, #2c4a63, #1f3546);
+    border: none;
+    color: #dce8f0;
+    box-shadow: 0 8px 20px rgba(31,53,70,0.45);
+  }
+  .reward-btn.spellpack:hover{ background: linear-gradient(135deg, #355a78, #274154); }
+  .reward-btn.alchemy{
+    background: linear-gradient(135deg, #3f7a52, #2d5a3c);
+    border: none;
+    color: #e2f2e6;
+    box-shadow: 0 8px 20px rgba(45,90,60,0.4);
+  }
+  .reward-btn.alchemy:hover{ background: linear-gradient(135deg, #488c5f, #366b47); }
+
+  /* ---------- Modal (Card Reward popup) ---------- */
+  .modal-backdrop{
+    position: fixed;
+    inset: 0;
+    background: rgba(8,9,12,0.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index: 1000;
+    padding: 24px;
+    animation: fadeIn 0.15s ease;
+  }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  .modal-box{
+    background: var(--ink-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 420px;
+    width: 100%;
+    max-height: 86vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+    animation: modalIn 0.22s ease;
+  }
+  @keyframes modalIn{
+    from{ opacity:0; transform: scale(0.95) translateY(8px); }
+    to{ opacity:1; transform:none; }
+  }
+  .modal-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .modal-head h3{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 21px;
+    margin: 0;
+  }
+  .modal-close{
+    background: none;
+    border: none;
+    color: var(--ash);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+  .modal-close:hover{ color: var(--cream); }
+
+  /* ---------- Card Rewards: treasure chest ---------- */
+  .chest-scene{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    gap: 16px;
+    padding: 22px 10px 8px;
+    min-height: 220px;
+  }
+  .chest{
+    position: relative;
+    width: 150px;
+    height: 112px;
+    perspective: 900px;
+  }
+  .chest-body{
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 150px; height: 70px;
+    background: linear-gradient(180deg, #8a5a2e, #6b431f);
+    border: 3px solid #4a2d13;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+  }
+  .chest-body::after{
+    content: '';
+    position: absolute;
+    left: 50%; top: 0;
+    transform: translateX(-50%);
+    width: 16px; height: 100%;
+    background: var(--brass);
+  }
+  .chest-body::before{
+    content: '';
+    position: absolute;
+    left: 50%; top: -7px;
+    transform: translateX(-50%);
+    width: 22px; height: 16px;
+    background: var(--brass);
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px #4a2d13;
+    z-index: 3;
+  }
+  .chest-lid{
+    position: absolute;
+    top: 4px; left: 0;
+    width: 150px; height: 48px;
+    background: linear-gradient(180deg, #9c6a36, #7a4f24);
+    border: 3px solid #4a2d13;
+    border-radius: 16px 16px 4px 4px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    backface-visibility: hidden;
+    will-change: transform;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .chest.opening .chest-lid{
+    transform: rotateX(-72deg);
+  }
+  .chest-glow{
+    position: absolute;
+    left: 50%; top: 30px;
+    transform: translateX(-50%) scale(0);
+    width: 84px; height: 84px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,224,130,0.9), rgba(255,224,130,0) 70%);
+    opacity: 0;
+    z-index: 1;
+  }
+  .chest.opening .chest-glow{
+    animation: chestGlow 1.4s ease 0.6s forwards;
+  }
+  @keyframes chestGlow{
+    0%{ opacity: 0; transform: translateX(-50%) scale(0); }
+    45%{ opacity: 1; transform: translateX(-50%) scale(1.5); }
+    100%{ opacity: 0; transform: translateX(-50%) scale(2); }
+  }
+  .reward-caption{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ash);
+  }
+  .reward-result{
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    max-width: 240px;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 10px;
+  }
+  .reward-result.multi{ max-width: 100%; }
+  .reward-result.show{ opacity: 1; transform: none; }
+  .reward-card-preview{
+    width: 220px;
+    max-width: 100%;
+  }
+  .modal-box.wide{ max-width: 760px; }
+  .modal-results{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    justify-content: center;
+    justify-items: center;
+    gap: 14px;
+  }
+  @media (max-width: 620px){
+    .modal-results{ grid-template-columns: 1fr; }
+  }
+  .modal-results .reward-card-preview{
+    width: 100%;
+    max-width: 220px;
+    min-height: 170px;
+    animation: cardIn 0.28s ease backwards;
+  }
+  .modal-results .reward-card-preview:nth-child(1){ animation-delay: 0.05s; }
+  .modal-results .reward-card-preview:nth-child(2){ animation-delay: 0.15s; }
+  .modal-results .reward-card-preview:nth-child(3){ animation-delay: 0.25s; }
+
+  /* ---------- Toast ---------- */
+  #toast-region{
+    position: fixed;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items:center;
+  }
+  .toast{
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: #fff;
+    background: var(--error);
+    box-shadow: 0 8px 24px var(--error-glow);
+    animation: toastIn 0.18s ease, toastOut 0.25s ease 2.6s forwards;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .toast.success{ background: #2f5f45; box-shadow: 0 8px 24px rgba(111,174,127,0.25); }
+  @keyframes toastIn{ from{ opacity:0; transform: translateY(-8px); } to{ opacity:1; transform:none; } }
+  @keyframes toastOut{ to{ opacity:0; transform: translateY(-8px); } }
+
+  footer.hint{
+    margin-top: 26px;
+    font-size: 12px;
+    color: var(--ash-dim);
+    text-align: center;
+  }
+
+  /* ---------- History log ---------- */
+  .history{
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .history-head{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .history-head h3{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0;
+    color: var(--ash);
+  }
+  .history-list{
+    max-height: 220px;
+    overflow-y: auto;
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 4px;
+  }
+  .history-list::-webkit-scrollbar{ width: 5px; }
+  .history-list::-webkit-scrollbar-thumb{ background: var(--line-strong); border-radius: 4px; }
+  .history-empty{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ash-dim);
+    padding: 10px 2px;
+  }
+  .history-row{
+    display:flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 12.5px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: var(--ink-3);
+    border: 1px solid var(--line);
+  }
+  .history-row.used-backpack,
+  .history-row.used-enchanted{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .history-row-main{
+    display:flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .history-tag{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .history-row.added .history-tag{ background: rgba(111,174,127,0.18); color: var(--success); border: 1px solid rgba(111,174,127,0.3); }
+  .history-row.removed .history-tag{ background: rgba(208,86,74,0.16); color: var(--error); border: 1px solid rgba(208,86,74,0.3); }
+  .history-row.used-backpack .history-tag{ background: rgba(165,113,63,0.2); color: var(--leather-bright); border: 1px solid rgba(165,113,63,0.35); }
+  .history-row.used-enchanted .history-tag{ background: rgba(124,92,184,0.22); color: var(--violet-bright); border: 1px solid rgba(124,92,184,0.35); }
+  .history-text{
+    color: var(--cream);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .history-text .muted{ color: var(--ash-dim); }
+  .history-time{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ash-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .history-undo{
+    align-self: flex-start;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    background: var(--ink);
+    color: var(--cream);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .history-undo:hover{ background: #262c37; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand-mark">
+      <div class="seal">B</div>
+      <div>
+        <h1>Book</h1>
+        <div class="tagline">Player 1</div>
+      </div>
+    </div>
+    <div class="import-block">
+      <div class="store-count">
+        <strong id="store-count-num">0</strong>
+        cards in store
+        <div class="save-status" id="save-status">&nbsp;</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" type="button" data-tab="specified" id="tab-specified">
+      <span class="dot"></span>
+      Specified Slots
+      <span class="tab-count" id="specified-count">0 / 20</span>
+    </button>
+    <button class="tab-btn" type="button" data-tab="free" id="tab-free">
+      <span class="dot"></span>
+      Free Slots
+      <span class="tab-count" id="free-count">0 / 20</span>
+    </button>
+    <button class="tab-btn tab-jenny" type="button" data-tab="jenny" id="tab-jenny">
+      <span class="dot"></span>
+      <span id="jenny-tab-text">J0</span>
+      <span class="coin" aria-hidden="true">J</span>
+    </button>
+    <button class="tab-btn" type="button" data-tab="random-items" id="tab-random-items">
+      <span class="dot"></span>
+      Random Items
+    </button>
+    <button class="tab-btn" type="button" data-tab="wands" id="tab-wands">
+      <span class="dot"></span>
+      Wands
+    </button>
+  </nav>
+
+  <main class="boards">
+    <section class="panel active" id="panel-specified">
+      <div class="panel-sub">Card number entered must match a store card and an open numbered slot.</div>
+      <div class="slot-grid" id="specified-grid"></div>
+      <div class="history">
+        <div class="history-head">
+          <h3>Activity History</h3>
+        </div>
+        <div class="history-list" id="specified-history"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-free">
+      <div class="pack-controls" id="pack-controls"></div>
+      <div class="panel-sub">Card is placed in the first open space, regardless of number.</div>
+      <div class="slot-grid" id="free-grid"></div>
+      <div class="history">
+        <div class="history-head">
+          <h3>Activity History</h3>
+        </div>
+        <div class="history-list" id="free-history"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-jenny">
+      <div class="jenny-balance">
+        <span id="jenny-balance-text">J0</span>
+        <span class="coin coin-lg" aria-hidden="true">J</span>
+      </div>
+      <div class="jenny-controls">
+        <input type="number" id="jenny-input" class="jenny-input" placeholder="Amount" min="0" inputmode="decimal">
+        <button type="button" id="jenny-add-btn" class="jenny-btn add" disabled>Add</button>
+        <button type="button" id="jenny-lose-btn" class="jenny-btn lose" disabled>Lose</button>
+      </div>
+      <div class="history">
+        <div class="history-head">
+          <h3>Activity History</h3>
+        </div>
+        <div class="history-list" id="jenny-history"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-random-items">
+      <div class="jenny-rewards">
+        <div class="jenny-rewards-label">Card Rewards</div>
+        <div class="jenny-rewards-buttons">
+          <button type="button" id="normal-reward-btn" class="reward-btn">Normal Card Reward</button>
+          <button type="button" id="rare-reward-btn" class="reward-btn rare">Rare Card Reward</button>
+          <button type="button" id="spell-pack-btn" class="reward-btn spellpack">Random Spell Pack</button>
+          <button type="button" id="alchemy-btn" class="reward-btn alchemy">Alchemy Ingredient</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-wands">
+      <div class="panel-sub">Press "Use" on a wand in Free Slots to move it here and start tracking its charges.</div>
+      <div class="wand-grid" id="wand-grid"></div>
+    </section>
+  </main>
+
+  <footer class="hint" id="hint-text">This copy of Book comes pre-loaded with its card catalog.</footer>
+</div>
+
+<div id="toast-region"></div>
+
+<script>
+(function(){
+  const SPECIFIED_SLOT_COUNT = 20;
+  const BASE_FREE_SLOT_COUNT = 20;
+  const PACK_BONUS = 5;
+  const BACKPACK_CARD_NAME = 'Backpack';
+  const GENERAL_STORE_MIN = 20;
+  const GENERAL_STORE_MAX = 500;
+  const SPELL_CARD_MIN = 1001;
+  const SPELL_CARD_MAX = 2000;
+  const SPELL_TYPES = ['spell', 'attack spell'];
+  const ENCHANTED_CARD_NAME = 'Enchanted Pack';
+  const CHOOSE_TWO_CARD_NUMBER = 1027;
+  const ALCHEMY_MIN = 134;
+  const ALCHEMY_MAX = 139;
+  const ALCHEMY_PRIMARY_NUMBER = 134;
+  const ALCHEMY_PRIMARY_WEIGHT = 4;
+  const ALCHEMY_REROLL_CHANCE = 0.1;
+  const WAND_CARD_NUMBERS = [97, 98, 99, 108, 165, 176, 177];
+  const WAND_MAX_CHARGES = 9;
+  const WAND_MIN_CHARGES = 0;
+
+  // ---------------------------------------------------------------------
+  // EMBEDDED CARD STORE
+  // This is the entire card catalog, baked directly into this file so it
+  // works standalone on any device/browser with no import step required.
+  // To update the catalog, provide a new spreadsheet and get a fresh copy
+  // of this file with this object regenerated from it.
+  // ---------------------------------------------------------------------
+  const EMBEDDED_CARD_STORE = {"0":{"number":0,"name":"Ruler's Blessing","type":"Item","rank":"SS","description":"The user gains the ability to permanently leave Greed Island, gaining J10,000 and the physical form of 1 chosen Specified Slot item.","value":"X","limit":"X"},"1":{"number":1,"name":"Pitcher of Eternal Water","type":"Item","rank":"A","description":"A jar from which pure, clean water continually flows when tipped.","value":"X","limit":"30"},"2":{"number":2,"name":"Rations Screen","type":"Item","rank":"B","description":"A small screen that can be used to create an infinite number of supplement pills, which give sufficient nutrients for a semi-healthy day of eating food.","value":"X","limit":"100"},"3":{"number":3,"name":"Revenant","type":"Item","rank":"SS","description":"An ordinary chicken, which follows the party around. If the chicken is ever injured, it will become a Revenant Chicken until the person who injured it dies.","value":"X","limit":"3"},"4":{"number":4,"name":"Paladin's Necklace","type":"Item","rank":"C","description":"A player wearing this gain's the ability to cast the \"Defensive Wall\" spell card's effect once per day (without needing a copy of the card). Outside of the game, this necklace can be used to remove any curse on an item/person that the wearer touches.","value":"X","limit":"200"},"5":{"number":5,"name":"Jester's Hat","type":"Item","rank":"S","description":"A hat that occassionally changes the wearer's fortune (roll an additional d20 anytime you roll a d20. If the extra dice is a 20 or a 1 and the main dice is neither, take the result of the extra dice).","value":"X","limit":"10"},"6":{"number":6,"name":"Witch's Diet Pill","type":"Item","rank":"A","description":"Restores the user to any desired weight between 100 and 200 pounds.","value":"X","limit":"30"},"7":{"number":7,"name":"Witch's Rejuvenation Potion","type":"Item","rank":"S","description":"Restores the user to any desired age between 18 and 25.","value":"X","limit":"10"},"8":{"number":8,"name":"Blue Planet","type":"Item","rank":"SS","description":"A unique blue jewel with unknown properties.","value":"X","limit":"3"},"9":{"number":9,"name":"Night Jade","type":"Item","rank":"A","description":"A blessed jewel. When critical danger is about to befall its owner, it will start to glow.","value":"X","limit":"30"},"10":{"number":10,"name":"Rainbow Diamond","type":"Item","rank":"A","description":"A diamond that shines in a rainbow of colors. Propose with this diamond, and the person is guaranteed to say \"yes\" as long as they are a member of the opposite gender.","value":"X","limit":"30"},"11":{"number":11,"name":"Risky Dice","type":"Item","rank":"B","description":"A twenty-sided dice with one skull face and 19 star faces. When you roll a star, great things will happen, but when you roll a skull, something bad enough to cancel all previous great events will occur.","value":"X","limit":"100"},"12":{"number":12,"name":"Weird Mask","type":"Item","rank":"C","description":"One can only call it a work of art... While wearing the mask, the wearer gains +5 ft of movement, +2 to hit, and +2 to damage rolls. At the start of each of the wearer's turns, he/she must roll a d10. On a 1, the wearer skips his/her turn and starts laughing diabolically.","value":"X","limit":"200"},"13":{"number":13,"name":"Sword of Truth","type":"Item","rank":"B","description":"A sword that splits in two anything and anyone who has told a lie to you within the past 60 seconds. The sword will shatter when used to cut something true, but will regenerate if stored in its scabbard for one day.","value":"X","limit":"100"},"14":{"number":14,"name":"Recycling Room Key","type":"Item","rank":"S","description":"A key that summons a door leading to a space where items can be placed/retrieved at will, but living beings cannot enter. Put something broken in this room and it will be fixed 24 hours later. The door cannot be opened during this time, and only 1 item can be put in this room at any given time.","value":"X","limit":"10"},"15":{"number":15,"name":"Gentle Gloves","type":"Item","rank":"C","description":"A pair of incredibly padded gloves. These gloves can only be removed by their owner when put on. No weapons can be used while wearing the gloves, and no damage can be done with unarmed fist attacks.","value":"X","limit":"200"},"16":{"number":16,"name":"Chunk of Ore","type":"Item","rank":"A","description":"A chunk of ore, the likes of which you have never seen before. It's fabled to be one of the most powerful metals on Earth.","value":"X","limit":"30"},"17":{"number":17,"name":"Sleeping Girl","type":"Item","rank":"A","description":"A girl that sleeps for your party. Members of the party can be active without the need for sleep, and if they haven't experienced a short/long rest in 4 hours, or a long rest in 8 hours, they can choose to immediately gain the benefit of having done so.","value":"X","limit":"30"},"18":{"number":18,"name":"\"Loss\"","type":"Item","rank":"A","description":"A very high quality painting of a masked man wearing a cape, holding a gleaming longsword and shield. For some reason, looking upon the painting fills the viewer with grief.","value":"X","limit":"30"},"19":{"number":19,"name":"Angel's Breath","type":"Spell","rank":"SS","description":"Resurrect a fallen ally at 1 HP.","value":"X","limit":"3"},"20":{"number":20,"name":"Merchant's Pendant","type":"Item","rank":"A","description":"Allows infinite usage of the Trade spell, without needing to use the Trade spell, or summon book.","value":"J5,000","limit":"X"},"21":{"number":21,"name":"Healing Potion","type":"Item","rank":"C","description":"Heals 2d4+2 HP.","value":"J1,000","limit":"X"},"22":{"number":22,"name":"Remote Explosive","type":"Item","rank":"B","description":"Plant this as an action. As a bonus action, this card's owner can detonate the explosive, inflicting 4D6 fire damage in a 20 ft radius, or half as much on a successful DC 15 DEX save.","value":"J3,000","limit":"X"},"23":{"number":23,"name":"Fire Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to fire (the whetstone is not consumed).","value":"J4,000","limit":"X"},"24":{"number":24,"name":"Frost Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to cold (the whetstone is not consumed).","value":"J4,000","limit":"X"},"25":{"number":25,"name":"Light Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to radiant (the whetstone is not consumed).","value":"J4,000","limit":"X"},"26":{"number":26,"name":"Dark Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to necrotic (the whetstone is not consumed).","value":"J4,000","limit":"X"},"27":{"number":27,"name":"Mental Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to psychic (the whetstone is not consumed).","value":"J4,000","limit":"X"},"28":{"number":28,"name":"Force Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to force (the whetstone is not consumed).","value":"J4,000","limit":"X"},"29":{"number":29,"name":"Padded Armor","type":"Item","rank":"C","description":"AC becomes 11 + DEX. Light Armor. Disadvantage to Stealth.","value":"J1,000","limit":"X"},"30":{"number":30,"name":"Leather Armor","type":"Item","rank":"C","description":"AC becomes 11 + DEX. Light Armor.","value":"J1,000","limit":"X"},"31":{"number":31,"name":"Studded Leather Armor","type":"Item","rank":"B","description":"AC becomes 12 + DEX. Light Armor.","value":"J3,000","limit":"X"},"32":{"number":32,"name":"Hide Armor","type":"Item","rank":"C","description":"AC becomes 12 + DEX (max 2). Medium Armor.","value":"J1,000","limit":"X"},"33":{"number":33,"name":"Chain Armor","type":"Item","rank":"C","description":"AC becomes 13 + DEX (max 2). Medium Armor.","value":"J2,000","limit":"X"},"34":{"number":34,"name":"Scale Mail","type":"Item","rank":"C","description":"AC becomes 14 + DEX (max 2). Medium Armor. Disadvantage to Stealth.","value":"J2,000","limit":"X"},"35":{"number":35,"name":"Breastplate","type":"Item","rank":"B","description":"AC becomes 14 + DEX (max 2). Medium Armor.","value":"J3,000","limit":"X"},"36":{"number":36,"name":"Half Plate","type":"Item","rank":"B","description":"AC becomes 15 + DEX (max 2). Medium Armor. Disadvantage to Stealth.","value":"J4,000","limit":"X"},"37":{"number":37,"name":"Ring Mail","type":"Item","rank":"C","description":"AC becomes 14. Heavy Armor. Disadvantage to Stealth.","value":"J1,000","limit":"X"},"38":{"number":38,"name":"Chain Mail","type":"Item","rank":"B","description":"Requires STR 13 to equip. AC becomes 16. Heavy Armor. Disadvantage to Stealth.","value":"J3,000","limit":"X"},"39":{"number":39,"name":"Splint","type":"Item","rank":"B","description":"Requires STR 15 to equip. AC becomes 17. Heavy Armor. Disadvantage to Stealth.","value":"J4,000","limit":"X"},"40":{"number":40,"name":"Plate","type":"Item","rank":"A","description":"Requires STR 15 to equip. AC becomes 18. Heavy Armor. Disadvantage to Stealth.","value":"J5,000","limit":"X"},"41":{"number":41,"name":"Shield","type":"Item","rank":"C","description":"AC increases by 2 while equipping in one of your hands.","value":"J1,000","limit":"X"},"42":{"number":42,"name":"Club","type":"Item","rank":"C","description":"1d4 bludgeoning, light, simple.","value":"J1,000","limit":"X"},"43":{"number":43,"name":"Dagger","type":"Item","rank":"C","description":"1d4 piercing, finesse, light, thrown (range 20/60), simple.","value":"J1,000","limit":"X"},"44":{"number":44,"name":"Mace","type":"Item","rank":"C","description":"1d6 bludgeoning, simple.","value":"J1,000","limit":"X"},"45":{"number":45,"name":"Quarterstaff","type":"Item","rank":"C","description":"1d6 bludgeoning, Versatile (1d8), simple.","value":"J1,000","limit":"X"},"46":{"number":46,"name":"Spear","type":"Item","rank":"C","description":"1d6 piercing, thrown (range 20/60), versatile (1d8), simple.","value":"J1,000","limit":"X"},"47":{"number":47,"name":"Shortbow","type":"Item","rank":"C","description":"1d6 piercing, range: 80/320, two-handed, simple.","value":"J1,000","limit":"X"},"48":{"number":48,"name":"Light Crossbow","type":"Item","rank":"C","description":"1d8 piercing, range: 80/320, loading, two-handed, simple.","value":"J1,000","limit":"X"},"49":{"number":49,"name":"Shortsword","type":"Item","rank":"C","description":"1d6 piercing, finesse, light, martial.","value":"J1,000","limit":"X"},"50":{"number":50,"name":"Longsword","type":"Item","rank":"C","description":"1d8 slashing, versatile (1d10), martial.","value":"J1,000","limit":"X"},"51":{"number":51,"name":"Rapier","type":"Item","rank":"C","description":"1d8 piercing, finesse, martial.","value":"J1,000","limit":"X"},"52":{"number":52,"name":"Scimitar","type":"Item","rank":"C","description":"1d6 slashing, finesse, light, martial.","value":"J1,000","limit":"X"},"53":{"number":53,"name":"Longbow","type":"Item","rank":"C","description":"1d8 piercing, range: 150/600, heavy, two-handed, martial.","value":"J1,000","limit":"X"},"54":{"number":54,"name":"Hand Crossbow","type":"Item","rank":"C","description":"1d6 piercing, range: 30/120, loading, light, martial.","value":"J1,000","limit":"X"},"55":{"number":55,"name":"Heavy Crossbow","type":"Item","rank":"C","description":"1d6 piercing, range: 100/400, loading, heavy, two-handed, martial.","value":"J1,000","limit":"X"},"56":{"number":56,"name":"Sentinel Potion","type":"Item","rank":"B","description":"Gain +10 to Initiative rolls until your next long rest. Additionally, if you hit an enemy with an opportunity attack, the enemy loses all movement until the end of the turn.","value":"J3,000","limit":"X"},"57":{"number":57,"name":"Heroic Potion","type":"Item","rank":"B","description":"Gain +1d4 to attack rolls and ability checks until your next long rest.","value":"J3,000","limit":"X"},"58":{"number":58,"name":"Potion of Swiftness","type":"Item","rank":"A","description":"Gain Hastened (Gain a second action, gain +2 AC, and move double speed) for 3 turns, but gain Lethargic for 1 turn (can't move or take actions) after Hastened ends.","value":"J5,000","limit":"X"},"59":{"number":59,"name":"Antidote","type":"Item","rank":"B","description":"Recover from the Poisoned condition, and from any disease.","value":"J3,000","limit":"X"},"60":{"number":60,"name":"Potion of Hill Giant Strength","type":"Item","rank":"A","description":"Your Strength is 18 until your next long rest.","value":"J5,000","limit":"X"},"61":{"number":61,"name":"Potion of Instant Hibernation","type":"Item","rank":"B","description":"You spend 30 seconds asleep and then wake up as if you just took a long rest.","value":"J4,000","limit":"X"},"62":{"number":62,"name":"Potion of Frenzy","type":"Item","rank":"B","description":"You gain advantage on each of your attacks and enemies gain advantage on attacks against you for 5 turns.","value":"J3,000","limit":"X"},"63":{"number":63,"name":"Ring of Protection","type":"Item","rank":"A","description":"You gain +1 AC and +1 on saving throws.","value":"J7,000","limit":"X"},"64":{"number":64,"name":"Cloak of Protection","type":"Item","rank":"A","description":"You gain +1 AC and +1 on saving throws.","value":"J6,000","limit":"X"},"65":{"number":65,"name":"Boots of Swiftness","type":"Item","rank":"B","description":"You gain +10 ft of movement speed.","value":"J4,000","limit":"X"},"66":{"number":66,"name":"Adamantine Ring","type":"Item","rank":"S","description":"While wearing this ring, attackers cannot crit you.","value":"J10,000","limit":"X"},"67":{"number":67,"name":"Misty Ring","type":"Item","rank":"B","description":"You can cast Misty Step to teleport to a visible location up to 30 feet away without invoking an attack of oppertunity once per long rest.","value":"J4,000","limit":"X"},"68":{"number":68,"name":"Flaming Longsword","type":"Item","rank":"B","description":"1d10 fire, versatile (1d12), martial.","value":"J3,000","limit":"X"},"69":{"number":69,"name":"Frozen Shortbow","type":"Item","rank":"B","description":"1d8 cold, range: 80/320, two-handed, simple.","value":"J3,000","limit":"X"},"70":{"number":70,"name":"Jagged Scimitar","type":"Item","rank":"B","description":"1d10 slashing, finesse, light, martial.","value":"J3,000","limit":"X"},"71":{"number":71,"name":"Wicked Dagger","type":"Item","rank":"B","description":"1d8 piercing, finesse, light, thrown (range 20/60), simple.","value":"J3,000","limit":"X"},"72":{"number":72,"name":"Blessed Longbow","type":"Item","rank":"B","description":"1d10 piercing, range: 150/600, heavy, two-handed, martial.","value":"J3,000","limit":"X"},"73":{"number":73,"name":"Precise Shortsword","type":"Item","rank":"A","description":"1d8 piercing, finesse, light, martial. While wielding this weapon, the number that you need to roll a crit is lowered by 2.","value":"J8,000","limit":"X"},"74":{"number":74,"name":"Blunt Crossbow","type":"Item","rank":"B","description":"2d6 piercing, range: 15/30, loading, two-handed, simple.","value":"J4,000","limit":"X"},"75":{"number":75,"name":"Automated Reloader","type":"Item","rank":"A","description":"A mechanical arm that attaches to your backpack. While wearing the Automated Reloader, ignore the \"loading\" property of any weapons that you're using.","value":"J5,000","limit":"X"},"76":{"number":76,"name":"Nimble Crossbow+1","type":"Item","rank":"B","description":"1d8 piercing, range: 30/120, loading, light, martial.","value":"J4,000","limit":"X"},"77":{"number":77,"name":"Sniper's Crossbow","type":"Item","rank":"A","description":"1d6 piercing, range: 100/400, loading, heavy, two-handed, martial. Gain an additional 2d6 piercing damage when attacking from 60 ft away or more.","value":"J7,000","limit":"X"},"78":{"number":78,"name":"Essence Collector","type":"Item","rank":"B","description":"A small machine that can be used to extract an Essence Card from certain objects. Only 1 copy of each Essence Card can be owned at a time.","value":"J3,000","limit":"X"},"79":{"number":79,"name":"Ruby","type":"Item","rank":"A","description":"A shiny red gem.","value":"J5,000","limit":"X"},"80":{"number":80,"name":"Sapphire","type":"Item","rank":"A","description":"A shiny blue gem.","value":"J5,000","limit":"X"},"81":{"number":81,"name":"Diamond","type":"Item","rank":"S","description":"A shiny clear gem.","value":"J10,000","limit":"X"},"82":{"number":82,"name":"Obsidian","type":"Item","rank":"A","description":"A piece of jet black glass.","value":"J5,000","limit":"X"},"83":{"number":83,"name":"Backpack","type":"Item","rank":"B","description":"Increases number of available Free Slots by 5 if no Backpack has been used before.","value":"J3,000","limit":"X"},"84":{"number":84,"name":"Enchanted Pack","type":"Item","rank":"A","description":"Increases number of available Free Slots by 5 if no Enchanted Pack has been used before.","value":"J5,000","limit":"X"},"85":{"number":85,"name":"Ring of Bravery","type":"Item","rank":"B","description":"Gain resistance to the Frightened condition.","value":"J3,000","limit":"X"},"86":{"number":86,"name":"Urn of Screams","type":"Item","rank":"C","description":"Can be thrown up to 30 ft. When destroyed, all creatures within a 20 ft radius must succeed a DC 13 WIS save or become Frightened for up to 30 seconds.","value":"J2,000","limit":"X"},"87":{"number":87,"name":"Poison Darts x3","type":"Item","rank":"C","description":"Ranged weapon attack with a range of 30 ft. If a creature is hit with a Poison Dart, they take 1d4+DEX piercing and must succeed a DC 12 WIS save or become Poisoned for up to 30 seconds.","value":"J2,000","limit":"X"},"88":{"number":88,"name":"Urn of Poison","type":"Item","rank":"B","description":"Can be thrown up to 30 ft. When destroyed, all creatures within a 5 ft radius must succeed a DC 14 CON save or become Poisoned for up to 30 seconds.","value":"J1,000","limit":"X"},"89":{"number":89,"name":"Poisoner's Claws","type":"Item","rank":"A","description":"1d6 piercing, finesse, light, martial. When hitting a creature that is Poisoned, inflict an additional 2d6 poison.","value":"J5,000","limit":"X"},"90":{"number":90,"name":"Poisoner's Whetstone","type":"Item","rank":"A","description":"This whetstone can be used to change a weapon's damage type to poison (the whetstone is not consumed).","value":"J4,000","limit":"X"},"91":{"number":91,"name":"Poisoner's Cloak","type":"Item","rank":"A","description":"All outgoing poison damage is increased by +2 and creatures have disadvantage on WIS saving throws for your poison effects.","value":"J5,000","limit":"X"},"92":{"number":92,"name":"Searing Greatsword","type":"Item","rank":"A","description":"1d6 slashing and 1d6 fire, heavy, two-handed, martial. When hitting a creature, inflict Burn 2 on the creature (If a creature gets 5 stacks of Burn, all stacks are removed and the creature takes 2d6 fire damage and becomes vulnerable to fire damage).","value":"J5,000","limit":"X"},"93":{"number":93,"name":"Gauntlets of Flame","type":"Item","rank":"S","description":"All weapon attacks inflict an additional +2 fire damage and apply 1 stack of Burn (If a creature gets 5 stacks of Burn, all stacks are removed and the creature takes 2d6 fire damage and becomes vulnerable to fire damage).","value":"J10,000","limit":"X"},"94":{"number":94,"name":"Helm of Domination","type":"Item","rank":"SS","description":"The wearer is immune to the Charmed and Frightened conditions. Once per long rest, the wearer can cast Dominate Person.","value":"J15,000","limit":"X"},"95":{"number":95,"name":"Adamant Shield","type":"Item","rank":"S","description":"Gain +3 AC.","value":"J10,000","limit":"X"},"96":{"number":96,"name":"Portable Inn","type":"Item","rank":"A","description":"Can be used to permanently create an Inn at the chosen location (cannot share the space of a city or location on the map). Once created, the inn can be named, the Innkeeper NPC can be named, and the inn can be stayed in for free by the party that created it.","value":"J5,000","limit":"X"},"97":{"number":97,"name":"Wand of Magic Missiles","type":"Item","rank":"B","description":"Has 4 max charges. If no duplicate wands are owned, recovers INT charges on a long rest. As an action, 1 charge can be used to cast the Magic Missiles spell.","value":"J3,000","limit":"X"},"98":{"number":98,"name":"Wand of Fireball","type":"Item","rank":"A","description":"Has 1 max charge. If no duplicate wands are owned, recovers INT charges on a long rest. As an action,1 charge can be used to cast the Fireball spell.","value":"J5,000","limit":"X"},"99":{"number":99,"name":"Wand of Shield","type":"Item","rank":"A","description":"Has 3 max charges. If no duplicate wands are owned, recovers INT charges on a long rest. As a reaction, 1 charge can be used to cast the Shield spell.","value":"J5,000","limit":"X"},"100":{"number":100,"name":"Provisions","type":"Item","rank":"C","description":"A pack of ordinary food, including lots of bread, and a cheese wheel.","value":"J1,000","limit":"X"},"101":{"number":101,"name":"Quality Provisions","type":"Item","rank":"B","description":"A pack of delicious foods, including spiced meats, exotic cheese, and dried fruits and vegetables. When used during a short rest, the party receives the benefits of having taken a long rest.","value":"J3,000","limit":"X"},"102":{"number":102,"name":"Inn Coupon","type":"Item","rank":"C","description":"A coupon that can be redeemed at any inn for a free room.","value":"J2,000","limit":"X"},"103":{"number":103,"name":"Discount Coupon","type":"Item","rank":"B","description":"A coupon that can be redeemed at any card store to permanently reduce the cost of cards by J1,000 (not less than J1,000).","value":"J3,000","limit":"X"},"104":{"number":104,"name":"Restock Coupon","type":"Item","rank":"C","description":"A coupon that can be redeemed at any card store to cause their stock to refresh as if a new day had come.","value":"J2,000","limit":"X"},"105":{"number":105,"name":"Slayer's Longsword","type":"Item","rank":"S","description":"2d6 slashing, versatile (2d8), martial. If an attack with Slayer's Longsword kills the target, gain an additional attack (doesn't trigger Extra Attack). While attacking with Slayer's Longsword, once per long rest, you can use Eviscerate (Double the damage dice of a hit attack. This does not stack with a crit).","value":"J11,000","limit":"X"},"106":{"number":106,"name":"Gold Seed","type":"Item","rank":"B","description":"A golden seed that can be planted in the Golden Plot. Grows a Golden Jenny Fruit card 24 hours later.","value":"J4,000","limit":"X"},"107":{"number":107,"name":"Mithril Seed","type":"Item","rank":"S","description":"A mithril seed that can be planted in the Golden Plot. Grows a Mithril Jenny Fruit card 24 hours later.","value":"J10,000","limit":"X"},"108":{"number":108,"name":"Wand of Lightning Bolt","type":"Item","rank":"A","description":"Has 1 max charge. If no duplicate wands are owned, recovers INT charges on a long rest. As an action,1 charge can be used to cast the Lightning Bolt spell.","value":"J5,000","limit":"X"},"109":{"number":109,"name":"Enchanting Stone","type":"Item","rank":"A","description":"Can be used to increase a weapon's enchantment (+1 to +2, etc).","value":"J6,000","limit":"X"},"110":{"number":110,"name":"Revitalizing Draught","type":"Item","rank":"A","description":"All HP is restored and all negative effects are removed.","value":"J5,000","limit":"X"},"111":{"number":111,"name":"Greater Healing Potion","type":"Item","rank":"B","description":"Heals 4d4+4 HP.","value":"J3,000","limit":"X"},"112":{"number":112,"name":"Treausre Map","type":"Item","rank":"S","description":"A map that leads the to a buried treasure chest. Who knows what it might contain?","value":"J10,000","limit":"X"},"113":{"number":113,"name":"Lucky Medallion","type":"Item","rank":"S","description":"A medallion that displays a nine-tailed fox. While wearing the medallion, the wearer will ignore the next time that he/she would otherwise die. Instead, the medallion will shatter and the wearer will recover all HP and lose all negative effects. Additionally, the wearer will gain the Hastened status for 3 turns.","value":"J10,000","limit":"X"},"114":{"number":114,"name":"Ring of Frost Armor","type":"Item","rank":"S","description":"A ring that allows infinite casts of the Armor of Agathys spell.","value":"J10,000","limit":"X"},"115":{"number":115,"name":"Boots of Frost","type":"Item","rank":"A","description":"Boots that cause icy terrain to be spread wherever the wearer walks. The wearer is immune to the effects of icy terrain.","value":"J5,000","limit":"X"},"116":{"number":116,"name":"Mithril Chainmail","type":"Item","rank":"SS","description":"A shirt that can be worn to reduce all incoming damage by 3. Grants resistance to piercing damage.","value":"J15,000","limit":"X"},"117":{"number":117,"name":"Travel Card","type":"Item","rank":"S","description":"A card that has 7 empty spaces on it. When the party travels to a city, an empty space will be filled in, instantly granting the owner J2,000.","value":"J10,000","limit":"X"},"118":{"number":118,"name":"Helm of Heightened Awareness","type":"Item","rank":"SS","description":"While the helmet is equipped, gain +2 WIS (can exceed 20), gain the ability to see invisible creatures, gain advantage on WIS saving throws, increase your spell save DC by 2, and gain +2 on hit rolls.","value":"J15,000","limit":"X"},"119":{"number":119,"name":"Bracers of Power","type":"Item","rank":"SS","description":"While the bracers are equipped, gain +2 STR (can exceed 20), gain an additional 1d4 on damage rolls that use your STR modifier, gain advantage on STR saving throws, and gain the ability to knock a target back 15 ft when struck by an unarmed attack, on a failed DC (10 + your STR) STR save.","value":"J15,000","limit":"X"},"120":{"number":120,"name":"Sentinel's Shield","type":"Item","rank":"A","description":"Gain +2 AC. While this shield is equipped, gain +5 on initiative rolls and you cannot be surprised.","value":"J5,000","limit":"X"},"121":{"number":121,"name":"Helmet of Flames","type":"Item","rank":"B","description":"All weapon attacks inflict Burn 1 (If a creature gets 5 stacks of Burn, all stacks are removed and the creature takes 2d6 fire damage and becomes vulnerable to fire damage).","value":"J3,000","limit":"X"},"122":{"number":122,"name":"Ring of Strength","type":"Item","rank":"A","description":"Gain +1 STR.","value":"J5,000","limit":"X"},"123":{"number":123,"name":"Ring of Dexterity","type":"Item","rank":"A","description":"Gain +1 DEX.","value":"J5,000","limit":"X"},"124":{"number":124,"name":"Ring of Constitution","type":"Item","rank":"A","description":"Gain +1 CON.","value":"J5,000","limit":"X"},"125":{"number":125,"name":"Ring of Intelligence","type":"Item","rank":"A","description":"Gain +1 INT.","value":"J5,000","limit":"X"},"126":{"number":126,"name":"Ring of Wisdom","type":"Item","rank":"A","description":"Gain +1 WIS.","value":"J5,000","limit":"X"},"127":{"number":127,"name":"Ring of Charisma","type":"Item","rank":"A","description":"Gain +1 CHA.","value":"J5,000","limit":"X"},"128":{"number":128,"name":"Amulet of Mockery","type":"Item","rank":"S","description":"Add your CHA to your damage rolls on weapon attacks. Once per short rest, you may inflict Paralyzed on a target for 2 turns if they fail a DC (10 + your CHA) CHA save.","value":"J10,000","limit":"X"},"129":{"number":129,"name":"Amulet of Intimidation","type":"Item","rank":"B","description":"Give friendly characters advantage on melee weapon attacks against enemies that are within 5 ft of your position.","value":"J4,000","limit":"X"},"130":{"number":130,"name":"Wizard's Hat","type":"Item","rank":"B","description":"Gives the wearer the ability to cast Light, Prestidigitation, and Fire Bolt.","value":"J3,000","limit":"X"},"131":{"number":131,"name":"Dust Pouch x2","type":"Item","rank":"C","description":"As a bonus action, inflict Blindness on an enemy (with eyes) who is 5 ft away on a failed DC 12 DEX save.","value":"J1,000","limit":"X"},"132":{"number":132,"name":"Throwing Knives x5","type":"Item","rank":"C","description":"1d6 light, range 30/90, finesse, special (throwing only).","value":"J1,000","limit":"X"},"133":{"number":133,"name":"Weapon Poison","type":"Item","rank":"C","description":"Use to coat a melee weapon, or 10 arrows for 6 hours. The weapon/arrows inflicts an additional 1d4 poison damage.","value":"J2,000","limit":"X"},"134":{"number":134,"name":"Sunblossom","type":"Item","rank":"C","description":"A golden flower, frequently used for medicinal purposes. Alchemy ingredient.","value":"J500","limit":"X"},"135":{"number":135,"name":"Mandrake Root","type":"Item","rank":"C","description":"An uncommon root that tastes quite sour. Alchemy ingredient.","value":"J500","limit":"X"},"136":{"number":136,"name":"Gravecap Mushroom","type":"Item","rank":"C","description":"A black mushroom with a pungent odor. Alchemy ingredient.","value":"J500","limit":"X"},"137":{"number":137,"name":"Silverleaf","type":"Item","rank":"C","description":"A leaf pulled from a parasitic vine. Alchemy ingredient.","value":"J500","limit":"X"},"138":{"number":138,"name":"Ghost Orchid","type":"Item","rank":"C","description":"A translucent flower. Alchemy ingredient.","value":"J500","limit":"X"},"139":{"number":139,"name":"Moonpetal","type":"Item","rank":"C","description":"A beautiful flower that blooms at night. Alchemy ingredient.","value":"J500","limit":"X"},"140":{"number":140,"name":"Healing Potion Recipe","type":"Item","rank":"C","description":"A recipe that shows how to make a Healing Potion.","value":"J1,000","limit":"X"},"141":{"number":141,"name":"Greater Healing Potion Recipe","type":"Item","rank":"C","description":"A recipe that shows how to make a Greater Healing Potion.","value":"J1,000","limit":"X"},"142":{"number":142,"name":"Sentinel Potion Recipe","type":"Item","rank":"B","description":"A recipe that shows how to make a Sentinel Potion.","value":"J3,000","limit":"X"},"143":{"number":143,"name":"Heroic Potion Recipe","type":"Item","rank":"B","description":"A recipe that shows how to make a Heroic Potion.","value":"J3,000","limit":"X"},"144":{"number":144,"name":"Potion of Swiftness Recipe","type":"Item","rank":"A","description":"A recipe that shows how to make a Potion of Swiftness.","value":"J5,000","limit":"X"},"145":{"number":145,"name":"Antidote Recipe","type":"Item","rank":"C","description":"A recipe that shows how to make an Antidote.","value":"J2,000","limit":"X"},"146":{"number":146,"name":"Potion of Hill Giant Strength Recipe","type":"Item","rank":"A","description":"A recipe that shows how to make a Potion of Hill Giant Strength.","value":"J5,000","limit":"X"},"147":{"number":147,"name":"Potion of Instant Hibernation Recipe","type":"Item","rank":"A","description":"A recipe that shows how to make a Potion of Instant Hibernation.","value":"J5,000","limit":"X"},"148":{"number":148,"name":"Potion of Frenzy Recipe","type":"Item","rank":"B","description":"A recipe that shows how to make a Potion of Frenzy.","value":"J3,000","limit":"X"},"149":{"number":149,"name":"Revitalizing Draught Recipe","type":"Item","rank":"S","description":"A recipe that shows how to make a Revitalizing Draught.","value":"J10,000","limit":"X"},"150":{"number":150,"name":"Weapon Poison Recipe","type":"Item","rank":"A","description":"A recipe that shows how to make a Weapon Poison.","value":"J5,000","limit":"X"},"151":{"number":151,"name":"Battleaxe","type":"Item","rank":"C","description":"1d8 slashing, versatile (1d10), martial.","value":"J1,000","limit":"X"},"152":{"number":152,"name":"Handaxe","type":"Item","rank":"C","description":"1d6 slashing, range: 20/60, light, martial.","value":"J1,000","limit":"X"},"153":{"number":153,"name":"Greater Battleaxe","type":"Item","rank":"B","description":"1d10 slashing, versatile (2d6), martial.","value":"J3,000","limit":"X"},"154":{"number":154,"name":"Frost Handaxe","type":"Item","rank":"B","description":"1d6 slashing, range: 20/60, light, martial, once per short rest, the user can click a button on the handaxe to create a Cone of Frost (30 ft cone, all enemies take 2d6 cold, or half as much on a successful DC 13 CON save).","value":"J3,000","limit":"X"},"155":{"number":155,"name":"Molten Battleaxe","type":"Item","rank":"A","description":"1d6 slashing and 1d6 fire, versatile (1d8 slashing and 1d8 fire), martial. When hitting a creature, inflict Burn 2 on the creature (If a creature gets 5 stacks of Burn, all stacks are removed and the creature takes 2d6 fire damage and becomes vulnerable to fire damage).","value":"J6,000","limit":"X"},"156":{"number":156,"name":"Aldric's Battleaxe+1","type":"Item","rank":"S","description":"1d6 slashing and 1d8 radiant, versatile (1d8 slashing and 1d10 radiant), martial. When hitting a creature, if the creature is Undead, it must succeed a CON 15 save or be Frightened for 1 minute (can repeat the save on successive turns).","value":"J10,000","limit":"X"},"157":{"number":157,"name":"Battleaxe of Frenzy+2","type":"Item","rank":"SS","description":"2d6 slashing, versatile (2d8 slashing), martial. Once per turn, when a creature is killed by this axe, you can make an additional attack with the axe. Once per turn, when you receive damage from an enemy's melee attack, as a reaction, you can strike the enemy with the sheer power of your will, inflicting 1d6+WIS psychic damage.","value":"J15,000","limit":"X"},"158":{"number":158,"name":"Smoke Bomb x2","type":"Item","rank":"C","description":"Throw a bomb, creating a 15 ft range of smoke. All creatures inside of the smoke are blinded, and ranged attacks against them are done at a disadvantage, and done with half cover (target gets +2 AC).","value":"J1,000","limit":"X"},"159":{"number":159,"name":"Hardened Chain Mail","type":"Item","rank":"A","description":"Requires STR 13 to equip. AC becomes 16. Heavy Armor. Disadvantage to Stealth. Gain resistance to bludgeoning.","value":"J6,000","limit":"X"},"160":{"number":160,"name":"Mithril Studded Leather Armor","type":"Item","rank":"A","description":"AC becomes 12 + DEX. Light Armor. Gain resistance to slashing.","value":"J8,000","limit":"X"},"161":{"number":161,"name":"Swift Leather Armor","type":"Item","rank":"B","description":"AC becomes 11 + DEX. Light Armor. Gain 15 ft speed and can ignore all difficult terrain.","value":"J3,000","limit":"X"},"162":{"number":162,"name":"Shining Breastplate","type":"Item","rank":"B","description":"AC becomes 14 + DEX (max 2). Medium Armor. Gain resistance to piercing.","value":"J9,000","limit":"X"},"163":{"number":163,"name":"Slayer's Vest","type":"Item","rank":"S","description":"AC becomes 15 + DEX (max 2). Medium Armor. Disadvantage to Stealth. While this armor is equipped, gain resistance to fire and cold damage. Additionally, you receive 1 less damage from all sources.","value":"J10,000","limit":"X"},"164":{"number":164,"name":"Slayer's Shield","type":"Item","rank":"SS","description":"Gain +3 AC. While this shield is equipped, inflict an extra force damage for each time that you've attacked an enemy after the first.","value":"J15,000","limit":"X"},"165":{"number":165,"name":"Dawnbringer's Wand","type":"Item","rank":"SS","description":"Has 1 max charge. If no duplicate wands are owned, recovers INT charges on a long rest. As an action,1 charge can be used to cast the Sunbeam spell.","value":"J15,000","limit":"X"},"166":{"number":166,"name":"Dawnbringer's Staff","type":"Item","rank":"SS","description":"While holding the staff, make a concentration save when using a wand charge. On a successful save, the wand does not lose a charge.","value":"J15,000","limit":"X"},"167":{"number":167,"name":"Flask of Gasoline","type":"Item","rank":"C","description":"Throw this flask to cover a person or a 5 ft area in gas. If the gas receives fire damage, any creatures affected take 4d6 fire damage.","value":"J2,000","limit":"X"},"168":{"number":168,"name":"Entangling Arrow x6","type":"Item","rank":"C","description":"Fire this arrow to cover a 15 ft area in rough terrain.","value":"J2,000","limit":"X"},"169":{"number":169,"name":"Fire Arrow x6","type":"Item","rank":"C","description":"Fire this arrow to add an additional 1d6 fire damage to your normal ranged weapon attack, and hit for 1d6 fire damage on all enemies within a 5 ft radius of the target.","value":"J2,000","limit":"X"},"170":{"number":170,"name":"Ice Arrow x6","type":"Item","rank":"C","description":"Fire this arrow to add an additional 1d6 cold damage to your normal ranged weapon attack, and hit for 1d6 cold damage on all enemies within a 5 ft radius of the target.","value":"J2,000","limit":"X"},"171":{"number":171,"name":"Poison Arrow x6","type":"Item","rank":"C","description":"An enemy must succeed a DC 13 CON save when hit by this arrow, or be Poisoned for 60 seconds (can repeat the save), and take 1d6 poison damage at the start of every turn that they remain Poisoned.","value":"J2,000","limit":"X"},"172":{"number":172,"name":"Light Arrow x6","type":"Item","rank":"C","description":"Fire this arrow to add an additional 1d8 radiant damage to your normal ranged weapon attack.","value":"J2,000","limit":"X"},"173":{"number":173,"name":"Dark Arrow x6","type":"Item","rank":"C","description":"Fire this arrow to add an additional 1d8 necrotic damage to your normal ranged weapon attack.","value":"J2,000","limit":"X"},"174":{"number":174,"name":"Spooky Arrow x6","type":"Item","rank":"C","description":"Fire this arrow to cause your target to become Terrified on a failed DC 11 WIS save.","value":"J2,000","limit":"X"},"175":{"number":175,"name":"Relic Arrow x8","type":"Item","rank":"C","description":"Fire this arrow to add an additional 1d8 piercing damage to your normal ranged weapon attack.","value":"J2,000","limit":"X"},"176":{"number":176,"name":"Wand of Cure Wounds","type":"Item","rank":"B","description":"Has 3 max charges. If no duplicate wands are owned, recovers WIS charges on a long rest. As an action, 1 charge can be used to cast the Cure Wounds spell.","value":"J3,000","limit":"X"},"177":{"number":177,"name":"Wand of Mass Healing Word","type":"Item","rank":"A","description":"Has 1 max charge. If no duplicate wands are owned, recovers WIS charges on a long rest. As an action, 1 charge can be used to cast the Mass Healing Word spell.","value":"J5,000","limit":"X"},"178":{"number":178,"name":"Rope Trap","type":"Item","rank":"C","description":"Setup a rope trap on a tree branch, or some other suspended limb, which causes the creature who steps under the tree to get suspended upside down in the air (movement becomes 0, and has disadvantage to all attacks while suspended) on a failed DC 14 DEX save.","value":"J1,000","limit":"X"},"179":{"number":179,"name":"Crossbow Trap","type":"Item","rank":"C","description":"Setup a crossbow tripwire trap in an area up to 20 ft long from end to end, which causes the creature who steps under the tree to take 2d6 piercing on a failed DC 14 DEX save.","value":"J1,000","limit":"X"},"180":{"number":180,"name":"Cursed Fruit","type":"Item","rank":"C","description":"A basket of 6 tasty fruits. If a fruit is eaten, any creature with under 40 HP will fall into a cursed sleep for 1d4 hours, or until taking half of their current HP as damage.","value":"J2,000","limit":"X"},"181":{"number":181,"name":"Enchanted Rope","type":"Item","rank":"B","description":"A rope that can be attached to any wall. While attached to a wall, if the rope is climbed, the user will dissappear into a 15 ft by 15 ft plane, with a hole leading back to the rope. Noise does not pass between the planes. The rope cannot be moved or destroyed once attached.","value":"J3,000","limit":"X"},"182":{"number":182,"name":"Enchanted Broom","type":"Item","rank":"S","description":"Gain a 30 ft fly speed.","value":"J10,000","limit":"X"},"183":{"number":183,"name":"Shrill Whistle","type":"Item","rank":"C","description":"As an action, blow on the whistle, inflicting 1d4 + INT psychic damage on all hearers within a 30 ft range.","value":"J2,000","limit":"X"},"184":{"number":184,"name":"Blessed Feast","type":"Item","rank":"C","description":"During a short rest, the party gains 5 extra max HP until their next long rest.","value":"J1,000","limit":"X"},"185":{"number":185,"name":"Blessed Fruit","type":"Item","rank":"C","description":"A basket of 6 blessed fruits. If a fruit is eaten, the creature receives 1d10 false life.","value":"J2,000","limit":"X"},"186":{"number":186,"name":"Floating Shield","type":"Item","rank":"A","description":"A magical shield that floats near the user. Gives +1 AC when attuned.","value":"J7,000","limit":"X"},"187":{"number":187,"name":"Disguise Kit","type":"Item","rank":"C","description":"A magical disguise kit that can be consumed to cause a creature to look exactly like a met player for 1d4 hours.","value":"J1,000","limit":"X"},"188":{"number":188,"name":"Thief's Dagger","type":"Item","rank":"C","description":"1d4 piercing, finesse, light, thrown (range 20/60), simple. Gain an additional 2d4 piercing if you are surprise attacking the target.","value":"J2,000","limit":"X"},"189":{"number":189,"name":"Trident of Disintegration","type":"Item","rank":"S","description":"1d8 piercing, versatile (1d10), thrown, martial. When a target is hit by the Trident of Disintegration, the target takes an additional 3d6 necrotic damage or half as much on a successful DC 14 CON save.","value":"J10,000","limit":"X"},"190":{"number":190,"name":"Force Spear","type":"Item","rank":"B","description":"1d6 piercing, versatile (1d8), thrown (range 20/60), simple. When this weapon is thrown, it inflicts 1d8 force damage on all creatures in a 15 ft radius of where it lands.","value":"J3,000","limit":"X"},"501":{"number":501,"name":"Animated Broom","type":"Treasure","rank":"C","description":"A flying broom that seems to have a mind of its own.","value":"J500","limit":"X"},"502":{"number":502,"name":"Gremlin","type":"Treasure","rank":"C","description":"A small and extremely ugly humanoid creature.","value":"J1,000","limit":"X"},"503":{"number":503,"name":"Dire Wolf","type":"Treasure","rank":"C","description":"A large wolf.","value":"J1,000","limit":"X"},"504":{"number":504,"name":"Fairie Dragon","type":"Treasure","rank":"C","description":"A strange creature that causes much mischief.","value":"J2,000","limit":"X"},"505":{"number":505,"name":"Lightning Sprite","type":"Treasure","rank":"C","description":"A small ball of electricity.","value":"J500","limit":"X"},"506":{"number":506,"name":"Death Dog","type":"Treasure","rank":"C","description":"An undead abomination with two heads.","value":"J1,000","limit":"X"},"507":{"number":507,"name":"Giant Hugging Beetle","type":"Treasure","rank":"C","description":"A large beetle that wanders in packs and bludgeons unlucky travelers to death.","value":"J1,000","limit":"X"},"508":{"number":508,"name":"Running Cactus","type":"Treasure","rank":"C","description":"A swift cactus that is very aggressive, but tends to keep its distance.","value":"J2,000","limit":"X"},"509":{"number":509,"name":"Earth Elemental","type":"Treasure","rank":"A","description":"A large, moving mass of rock.","value":"J5,000","limit":"X"},"510":{"number":510,"name":"Imp","type":"Treasure","rank":"C","description":"A short, red skinned humanoid with small horns on its head.","value":"J1,000","limit":"X"},"511":{"number":511,"name":"Mannequin","type":"Treasure","rank":"C","description":"A wooden statue, which seems to disdain magic, yet it casts magic and lives because of magic.","value":"J1,000","limit":"X"},"512":{"number":512,"name":"Ettercap","type":"Treasure","rank":"C","description":"An ugly, pale skinned creature that seems to be similar in behavior to a spider.","value":"J2,000","limit":"X"},"513":{"number":513,"name":"Displacer Beast","type":"Treasure","rank":"B","description":"A malformed beast with whipping tentacles, who's exact form is hard to observe due to its natural displacement.","value":"J3,000","limit":"X"},"514":{"number":514,"name":"Shade","type":"Treasure","rank":"C","description":"A shadow that moves around and can take shape.","value":"J2,000","limit":"X"},"515":{"number":515,"name":"Specter","type":"Treasure","rank":"B","description":"A transparent, floating, hooded humanoid.","value":"J4,000","limit":"X"},"516":{"number":516,"name":"Will-O'-Wisp","type":"Treasure","rank":"A","description":"A floating ball of cold light.","value":"J6,000","limit":"X"},"517":{"number":517,"name":"Ghost","type":"Treasure","rank":"A","description":"A transparent, floating human.","value":"J6,000","limit":"X"},"518":{"number":518,"name":"Giant Rat","type":"Treasure","rank":"C","description":"A very large rat.","value":"J500","limit":"X"},"519":{"number":519,"name":"Brown Bear","type":"Treasure","rank":"C","description":"A very large bear.","value":"J1,000","limit":"X"},"520":{"number":520,"name":"Giant Spider","type":"Treasure","rank":"C","description":"A spider that is many times larger than an ordinary spider.","value":"J1,000","limit":"X"},"521":{"number":521,"name":"Phase Spider","type":"Treasure","rank":"B","description":"A very large, alien-looking spider, who's form phases in and out of sight.","value":"J3,000","limit":"X"},"522":{"number":522,"name":"Kobold","type":"Treasure","rank":"C","description":"A small and very ugly humanoid creature.","value":"J500","limit":"X"},"523":{"number":523,"name":"Kobold Guard","type":"Treasure","rank":"C","description":"A small and very ugly humanoid creature, that is heavily armored.","value":"J1,000","limit":"X"},"524":{"number":524,"name":"Kobold Spellcaster","type":"Treasure","rank":"C","description":"A small and very ugly humanoid creature, capable of spellcasting.","value":"J1,000","limit":"X"},"525":{"number":525,"name":"Kobold Wyrmguard","type":"Treasure","rank":"B","description":"A small and very ugly humanoid creature, wielding powerful draconoic armor.","value":"J3,000","limit":"X"},"526":{"number":526,"name":"Deep Dragon","type":"Treasure","rank":"S","description":"A large, black dragon with pale eyes and green mushrooms growing in patches between its scales.","value":"J10,000","limit":"X"},"527":{"number":527,"name":"Blue Dragon","type":"Treasure","rank":"SS","description":"A large, powerful blue dragon.","value":"J20,000","limit":"X"},"528":{"number":528,"name":"nan","type":"Treasure","rank":"nan","description":"nan","value":"nan","limit":"X"},"529":{"number":529,"name":"nan","type":"Treasure","rank":"nan","description":"nan","value":"nan","limit":"X"},"530":{"number":530,"name":"nan","type":"Treasure","rank":"nan","description":"nan","value":"nan","limit":"X"},"701":{"number":701,"name":"Party Training: HP","type":"Item","rank":"A","description":"(Affects each member of the party) Increase your max HP by (half your hit dice rounded up) + CON and recover that amount of HP.","value":"J8,000","limit":"X"},"702":{"number":702,"name":"Training: Vitality","type":"Item","rank":"C","description":"Gain the Vitality feat: Gain Max HP equivalent to your level.","value":"J2,000","limit":"X"},"703":{"number":703,"name":"Training: Proficiency","type":"Item","rank":"B","description":"Gain proficiency in an armor type, a weapon type, in a skill, or in a saving throw.","value":"J3,000","limit":"X"},"704":{"number":704,"name":"Training: Alert","type":"Item","rank":"A","description":"Gain the Alert feat: +5 to Initiative rolls and you can't be surprised.","value":"J5,000","limit":"X"},"705":{"number":705,"name":"Training: Crossbow Expert","type":"Item","rank":"B","description":"Gain the Crossbow Expert feat: You ignore the loading property of crossbows and don't have disadvantage for being Threatened by a creature when you shoot.","value":"J3,000","limit":"X"},"706":{"number":706,"name":"Training: Defensive Duelist","type":"Item","rank":"A","description":"(Requires DEX 13) Gain the Defensive Duelist feat: You can add your proficiency bonus to your AC if you are wielding a finesse weapon, in reaction to a melee attack.","value":"J5,000","limit":"X"},"707":{"number":707,"name":"Training: Dual Wielder","type":"Item","rank":"A","description":"Gain the Dual Wielder feat: +1 to AC if you're wielding a melee weapon in each hand and gain two-weapon fighting with non-light weapon.","value":"J5,000","limit":"X"},"708":{"number":708,"name":"Training: Mobile","type":"Item","rank":"A","description":"Gain the Mobile feat: Your speed increases by 10 ft and you don't provoke opportunity attacks in melee.","value":"J5,000","limit":"X"},"709":{"number":709,"name":"Training: Savage Attacker","type":"Item","rank":"A","description":"Gain the Savage Attacker feat: You can reroll melee weapon attack damage once per turn.","value":"J5,000","limit":"X"},"710":{"number":710,"name":"Training: Sharpshooter","type":"Item","rank":"A","description":"Gain the Sharpshooter feat: Your ranged attacks ignore some cover, no disadvantage at long range, and possibility to take a -5 to hit for +10 on ranged damage.","value":"J5,000","limit":"X"},"711":{"number":711,"name":"Training: Resilient","type":"Item","rank":"A","description":"Gain +1 in one ability and you gain proficiency in saving throws using this ability.","value":"J5,000","limit":"X"},"712":{"number":712,"name":"Training: Nen Acuity","type":"Item","rank":"A","description":"Gain the Nen Acuity feat: Any instance of Nen based damage is increased by 2.","value":"J8,000","limit":"X"},"713":{"number":713,"name":"Training: Action Surge","type":"Item","rank":"B","description":"Gain the Action Surge action: Once per long rest, you can take an extra action on your turn (this does not take an action to use).","value":"J3,000","limit":"X"},"714":{"number":714,"name":"Training: Defensive Stance","type":"Item","rank":"B","description":"Gain the Defensive Stance action: Up to 2 times per short rest, you can use your bonus action to inflict disadvantage on all attack rolls against you until your next turn.","value":"J4,000","limit":"X"},"715":{"number":715,"name":"Training: Elemental Adept","type":"Item","rank":"B","description":"Gain the Elemental Adept feat: When you get this feat, choose a damage type (cold, fire, radiant, or necrotic) and become resistant to that damage type.","value":"J4,000","limit":"X"},"716":{"number":716,"name":"Training: Bound Weapon","type":"Item","rank":"A","description":"Gain the Bound Weapon feat: During a long rest, you can attune to a weapon. This weapon gains +1 to hit and damage rolls, and you can summon the weapon from any location to your hand as a bonus action.","value":"J5,000","limit":"X"},"717":{"number":717,"name":"Training: Bonus Action","type":"Item","rank":"S","description":"Gain an additional bonus action on each of your turns.","value":"J10,000","limit":"X"},"718":{"number":718,"name":"Training: Tinkerer","type":"Item","rank":"A","description":"Gain the Tinkerer feat: During a long rest, you can make an INT check to create up to 3 of a simple invention.","value":"J5,000","limit":"X"},"719":{"number":719,"name":"Training: Actor","type":"Item","rank":"B","description":"Gain the Actor feat: +1 in CHA, advantage on Deception and Performance checks, and gain the ability to mimic the speech of a person or the sounds made by a creature.","value":"J3,000","limit":"X"},"720":{"number":720,"name":"Training: Lucky","type":"Item","rank":"B","description":"Gain the Lucky feat: You can reroll one d20 or force to reroll an attack roll against you 3 times per long rest.","value":"J5,000","limit":"X"},"721":{"number":721,"name":"Training: Quick Swap","type":"Item","rank":"B","description":"Gain the Quick Swap feat: You can swap equipped weapons as a bonus action, instead of as an action.","value":"J3,000","limit":"X"},"722":{"number":722,"name":"Training: Superior Focus","type":"Item","rank":"B","description":"Gain the Superior Focus feat: Become immune to the Frightened and Charmed conditions. Additionally, gain advantage on all Concentration saving throws.","value":"J4,000","limit":"X"},"723":{"number":723,"name":"Training: Nen Resurgence","type":"Item","rank":"S","description":"Gain the Nen Resurgence action: Once per long rest, refresh your Nen ability cooldowns.","value":"J10,000","limit":"X"},"724":{"number":724,"name":"Training: Aura Reflex","type":"Item","rank":"S","description":"Gain an additional action/bonus action each turn to perform one of the 3 Nen related actions. Additionally, gain a 4th Nen action that you can perform during this additional action, called En: As an action, increase the size of your aura to a 15 ft radius, revealing any living beings in this radius to you.","value":"J10,000","limit":"X"},"725":{"number":725,"name":"Training: Throwing Mastery","type":"Item","rank":"B","description":"Gain the Throwing Mastery feat: +1 to hit and to damage when throwing a weapon. Additionally, you don't receive disadvantage when throwing at your max range on the thrown weapon.","value":"J3,000","limit":"X"},"726":{"number":726,"name":"Training: Quick Fists","type":"Item","rank":"B","description":"Gain the Quick Fists feat: As a bonus action, make an unarmed attack.","value":"J3,000","limit":"X"},"727":{"number":727,"name":"Training: Tavern Brawler","type":"Item","rank":"A","description":"Gain the Tavern Brawler feat: Gain +1 CON (max 20). Your unarmed attacks do 1d4 damage.","value":"J5,000","limit":"X"},"728":{"number":728,"name":"Training: Throwing Mastery","type":"Item","rank":"B","description":"Gain the Throwing Mastery feat: Gain +2 to hit and to damage rolls when throwing a weapon.","value":"J3,000","limit":"X"},"729":{"number":729,"name":"Training: Quick Fists","type":"Item","rank":"B","description":"Gain the Quick Fists feat: As a bonus action, make an unarmed attack.","value":"J3,000","limit":"X"},"730":{"number":730,"name":"Training: Tavern Brawler","type":"Item","rank":"B","description":"Gain the Tavern Brawler feat: Your unarmed attacks inflict 1d4 + STR/DEX instead. Add your proficiency bonus to your unarmed hit rolls.","value":"J3,000","limit":"X"},"900":{"number":900,"name":"Silk Potion Recipe","type":"Item","rank":"C","description":"A recipe that shows how to make a Silk Potion.","value":"J1,000","limit":"X"},"901":{"number":901,"name":"Silk Potion","type":"Item","rank":"A","description":"A white potion that smells very fragrant.","value":"J5,000","limit":"X"},"902":{"number":902,"name":"Silk Seed","type":"Item","rank":"B","description":"Can be planted to grow 12 Alchemy ingredient drops.","value":"J3,000","limit":"X"},"903":{"number":903,"name":"Silk Garment","type":"Item","rank":"A","description":"Gain +1 Charisma and +1 Dexterity while wearing.","value":"J5,000","limit":"X"},"904":{"number":904,"name":"Silk Cake","type":"Item","rank":"A","description":"3 Uses: Restore HP to full.","value":"J5,000","limit":"X"},"905":{"number":905,"name":"Silk Wand","type":"Item","rank":"A","description":"Has 3 max charges. If no duplicate wands are owned, recovers INT charges on a long rest. As an action, 1 charge can be used to cast the Sleep spell.","value":"J5,000","limit":"X"},"906":{"number":906,"name":"Silk Cloak","type":"Item","rank":"A","description":"Gain +2 to saving throws.","value":"J5,000","limit":"X"},"907":{"number":907,"name":"Training: Silk Fortune","type":"Item","rank":"B","description":"Gain the Silk Fortune feat: Whenever anyone in your party rolls a natural 20 for travelling or city events, immediately gain a Silk Potion card.","value":"J3,000","limit":"X"},"908":{"number":908,"name":"Silk Charm","type":"Item","rank":"S","description":"(One time use) Clear the Scourge from an area and reset island Scourge level.","value":"J10,000","limit":"X"},"1001":{"number":1001,"name":"Defensive Wall","type":"Spell","rank":"C","description":"Protects you from all attack spells. This effect ends after preventing the effects of a Rank B or higher attack spell.","value":"J1,000","limit":"X"},"1002":{"number":1002,"name":"Trade","type":"Spell","rank":"C","description":"Must specify a player when using. A request is sent to the player. If accepted, a menu appears where each player may trade cards. Trade can only be used while within the bounds of a city.","value":"J1,000","limit":"X"},"1003":{"number":1003,"name":"Return","type":"Spell","rank":"C","description":"Must specify a player or a previously visited location when using. A request is sent to the player (if it is not yourself). If accepted, the target flies to the specified location.","value":"J1,000","limit":"X"},"1004":{"number":1004,"name":"Contact","type":"Spell","rank":"C","description":"Must specify a player when using. A request is sent to the player (if it is not yourself). If accepted both players' surroundings can be heard through their respective books until the spell is ended by either player.","value":"J1,000","limit":"X"},"1005":{"number":1005,"name":"Clairvoyance","type":"Attack Spell","rank":"C","description":"Must specify a player when using. See all card data of the specified player.","value":"J2,000","limit":"X"},"1006":{"number":1006,"name":"Dispel","type":"Spell","rank":"C","description":"Must specify a player when using. Destroy all cards under the effect of the Fake spell in that player's possession. Additionally, remove any Trace effects on that player, and allow Gentle Gloves to be removed from the player.","value":"J2,000","limit":"X"},"1007":{"number":1007,"name":"Trace","type":"Attack Spell","rank":"C","description":"Must specify a player when using. The current location of that player will be available at all times.","value":"J2,000","limit":"X"},"1008":{"number":1008,"name":"Reflect","type":"Spell","rank":"B","description":"Must specify a player when using. Reflects the next attack spell cast by a specified player back at the specified player.","value":"J3,000","limit":"X"},"1009":{"number":1009,"name":"Magnetic Force","type":"Attack Spell","rank":"B","description":"Allows one person to fly to the location of the target player","value":"J3,000","limit":"X"},"1010":{"number":1010,"name":"Pickpocket","type":"Attack Spell","rank":"B","description":"Steals a random card from target player's Free Slots.","value":"J3,000","limit":"X"},"1011":{"number":1011,"name":"Drift","type":"Spell","rank":"B","description":"Allows your party to fly to a random unvisited town. If all towns have been visited, the party stays at the same place, but this card is still consumed.","value":"J3,000","limit":"X"},"1012":{"number":1012,"name":"Collision","type":"Spell","rank":"B","description":"Allows your party to fly to the location of a random player the caster has not met.","value":"J4,000","limit":"X"},"1013":{"number":1013,"name":"Drawbridge","type":"Spell","rank":"B","description":"Protect against all short range regular Spells. This effect ends after the caster chooses to end it, or after preventing the effects of a Rank A or higher regular spell.","value":"J3,000","limit":"X"},"1014":{"number":1014,"name":"Guidepost","type":"Spell","rank":"B","description":"Reveal the location of the chosen numbered card from numbers 1 - 19.","value":"J3,000","limit":"X"},"1015":{"number":1015,"name":"Lottery","type":"Spell","rank":"B","description":"Transform into a random item card.","value":"J3,000","limit":"X"},"1016":{"number":1016,"name":"List","type":"Spell","rank":"B","description":"Reveals the number of people in possession of the target card as well as the total number of copies.","value":"J3,000","limit":"X"},"1017":{"number":1017,"name":"Accompany","type":"Spell","rank":"B","description":"Fly the caster and all willing players within a 30 ft. radius of the caster to the location of the target city or target player.","value":"J4,000","limit":"X"},"1018":{"number":1018,"name":"Clone","type":"Spell","rank":"A","description":"Transform a card into a copy of target card that the caster already owns (if the card limit was at MAX, the transformation fails, but this card is still consumed).","value":"J7,000","limit":"X"},"1019":{"number":1019,"name":"Fake","type":"Spell","rank":"A","description":"Fake turns into one of the cards from numbers 1 - 19. The resulting card can be inserted into a Specified Slot, but doesn't count towards winning the game.","value":"J5,000","limit":"X"},"1020":{"number":1020,"name":"Thief","type":"Attack Spell","rank":"A","description":"Steals a random card from target player's Specified Slots.","value":"J6,000","limit":"X"},"1021":{"number":1021,"name":"Levy","type":"Spell","rank":"A","description":"Take one random card from each player within a 20ft radius.","value":"J7,000","limit":"X"},"1022":{"number":1022,"name":"Blackout Curtain","type":"Spell","rank":"A","description":"The caster is indefinitely protected from the effects of Peek and Fluoroscopy.","value":"J5,000","limit":"X"},"1023":{"number":1023,"name":"Recycle","type":"Spell","rank":"A","description":"Allows an item converted from a card to be changed into card form once more. If the applicable card limit is already at MAX, this card fails and is still consumed.","value":"J5,000","limit":"X"},"1024":{"number":1024,"name":"Mug","type":"Attack Spell","rank":"S","description":"Must specify a player when using. Take one card at will from the specified player.","value":"J10,000","limit":"X"},"1025":{"number":1025,"name":"Holy Water","type":"Spell","rank":"S","description":"Protects the player from the next 10 attack spells.","value":"J11,000","limit":"X"},"1026":{"number":1026,"name":"Leave","type":"Spell","rank":"S","description":"Must specify a player when using. A request is sent to the player (if it is not yourself). If accepted the player leaves the game.","value":"J10,000","limit":"X"},"1027":{"number":1027,"name":"Fortress","type":"Spell","rank":"S","description":"Choose 2 specified card slots. Those slots become immune to being stolen from permanently.","value":"J12,000","limit":"X"},"1028":{"number":1028,"name":"Eye of God","type":"Spell","rank":"SS","description":"Caster permanently obtains the effects of \"List\" and \"Analysis\" on all cards numbered 1 - 19.","value":"J15,000","limit":"X"},"2001":{"number":2001,"name":"Hero Soul","type":"Item","rank":"A","description":"Gain the Heroic Inspiration extra action (Once per short rest, as an extra action, you may give yourself or another party member within 30 feet an additional action). Additionally, gain the Heroic Strike action (Once per short rest, perform a melee weapon attack. On a hit, the target becomes stunned on a failed DC 12 + WIS save).","value":"X","limit":"X"},"2002":{"number":2002,"name":"Scoundrel Soul","type":"Item","rank":"A","description":"Gain the Accurate feat (You gain +2 to ranged attack rolls and +1 to melee attack rolls). Additionally, gain the Backstab action (When making a ranged or melee attack with advantage, gain 1 Backstab charge. When you have 3 Backstab charges, before rolling you're hit roll for an attack, you can spend all 3 charges to roll a 20).","value":"X","limit":"X"},"2003":{"number":2003,"name":"Caster Soul","type":"Item","rank":"A","description":"Gain the Spellcaster feat (You may use the Book action as an extra action each turn). Additionally, you gain the Recycle Spell action (Once per long rest, you may cast a Spell from your Book without consuming the spell). Additionally, gain the Wand Caster feat (wands recover 1 additional charge during rests, and can have 1 more charge than their displayed max).","value":"X","limit":"X"},"2004":{"number":2004,"name":"Blessed Soul","type":"Item","rank":"A","description":"Gain the Tough feat (Gain +2 HP per level) and gain the Healing Hands action (You gain a pool of Level * (4 + CON) HP. As an action, you can heal a party member for up to the remaining HP in this pool. The pool refreshes once per short rest).","value":"X","limit":"X"},"2005":{"number":2005,"name":"Tyrian's Rapier+2","type":"Item","rank":"S","description":"1d6 piercing, 1d6 radiant, finesse, martial. While attacking with Tyrian's Rapier, once per long rest, you can use Radiant Parry (Reaction. Increase your AC by 5 until the end of the turn. If this would cause you to avoid an attack, you may make an attack role on the attacker with Tyrian's Rapier).","value":"J12,000","limit":"X"},"2006":{"number":2006,"name":"Clump of Horse Hair","type":"Item","rank":"C","description":"A clump of Horse Hair given to you by the Stable Hand.","value":"J0","limit":"X"},"2007":{"number":2007,"name":"Essence of Lettuce","type":"Item","rank":"C","description":"Essence extracted from a head of lettuce.","value":"J0","limit":"X"},"2008":{"number":2008,"name":"Spring Water","type":"Item","rank":"B","description":"Water extracted from a natural spring.","value":"J0","limit":"X"},"2009":{"number":2009,"name":"Essence of Fairy","type":"Item","rank":"S","description":"Essence extracted from a fairy.","value":"J0","limit":"X"},"2010":{"number":2010,"name":"Druid's Gift","type":"Item","rank":"A","description":"Consume to gain the Summon Stag feat (Once per long rest, as an action, summon a Stag that you control).","value":"J5,000","limit":"X"},"2011":{"number":2011,"name":"Granny's Soup","type":"Item","rank":"B","description":"Consume this as a bonus action to heal to full HP.","value":"J3,000","limit":"X"},"2012":{"number":2012,"name":"Suspicious Soup","type":"Item","rank":"C","description":"What did Granny make? It doesn't look edible...","value":"J1,000","limit":"X"},"2013":{"number":2013,"name":"Unicorn Horn","type":"Item","rank":"A","description":"A valuable Unicorn's horn.","value":"J5,000","limit":"X"},"2014":{"number":2014,"name":"Party Training: Ability Score Improvement","type":"Item","rank":"S","description":"(Affects each member of the party) Gain +2 in one stat or +1 in 2 different stats (max 20).","value":"J10,000","limit":"X"},"2015":{"number":2015,"name":"Party Training: Nen","type":"Item","rank":"S","description":"(Affects each member of the party) Increase the power of your current Nen ability, or create another adjacent class Nen ability.","value":"J10,000","limit":"X"},"2016":{"number":2016,"name":"Party Training: Extra Attack","type":"Item","rank":"S","description":"(Affects each member of the party) Gain the Extra Attack feat (when you take the attack action, make another attack).","value":"J10,000","limit":"X"},"2017":{"number":2017,"name":"Horse","type":"Item","rank":"B","description":"A well trained horse. This creature can be returned to Card form when the owner says: \"Horse Return\".","value":"J3,000","limit":"X"},"2018":{"number":2018,"name":"Adamant Plate","type":"Item","rank":"SS","description":"Requires STR 16 to equip. AC becomes 19. Heavy Armor. Disadvantage to Stealth. Immune to crits.","value":"J15,000","limit":"X"},"2019":{"number":2019,"name":"Vorpel Blade+3","type":"Item","rank":"SS","description":"1d8 slashing, versatile (1d10), martial. When you roll an unmodified 20 on a creature with a head, the Vorpal Blade cuts off that creature's head, instantly killing any creature with only 1 head.","value":"J15,000","limit":"X"},"2020":{"number":2020,"name":"Map of Greed Island","type":"Item","rank":"C","description":"A map of Greed Island.","value":"J1,000","limit":"X"},"2021":{"number":2021,"name":"Party Training: Proficiency Bonus","type":"Item","rank":"A","description":"(Affects each member of the party) Increase your proficiency bonus by +1.","value":"J5,000","limit":"X"},"2022":{"number":2022,"name":"Revitalizing Draught","type":"Item","rank":"S","description":"Fully heal all of your HP and remove any negative effects.","value":"J10,000","limit":"X"},"2023":{"number":2023,"name":"Party Training: Movement","type":"Item","rank":"B","description":"(Affects each member of the party) Increase your movement speed by +5 ft.","value":"J3,000","limit":"X"},"2024":{"number":2024,"name":"Jenny Fruit","type":"Item","rank":"C","description":"A fruit, filled with J5,000.","value":"J1,000","limit":"X"},"2025":{"number":2025,"name":"Golden Jenny Fruit","type":"Item","rank":"B","description":"A golden fruit, filled with J10,000.","value":"J3,000","limit":"X"},"2026":{"number":2026,"name":"Enchanted Seed","type":"Item","rank":"C","description":"A golden seed that can be planted in the Golden Plot. Grows a Jenny Fruit card 24 hours later.","value":"J1,000","limit":"X"},"2027":{"number":2027,"name":"Mithril Jenny Fruit","type":"Item","rank":"S","description":"A mithril fruit, filled with J20,000.","value":"10000","limit":"X"},"2028":{"number":2028,"name":"Entangling Axe","type":"Item","rank":"A","description":"1d10 slashing, versatile (1d12 slashing), martial. When hitting a creature, the creature must make a DC (10 + your STR) STR save or be Restrained by roots. This save can be repeated at the end of each of the creature's turns.","value":"J5,000","limit":"X"}};
+
+  /** state **/
+  let cardStore = EMBEDDED_CARD_STORE;   // { [number]: {number,name,type,rank,description,value,limit} }
+  let specified = new Array(SPECIFIED_SLOT_COUNT).fill(null);
+  let freeSlotCount = BASE_FREE_SLOT_COUNT;
+  let free = new Array(freeSlotCount).fill(null);
+  let freeTowerFlags = new Array(freeSlotCount).fill(false);
+  let wands = [];              // [{id, number, charges}, ...] — starts empty
+  const wandCardRefs = {};     // id -> DOM element
+  let backpackUsed = false;
+  let enchantedUsed = false;
+  let specifiedHistory = [];       // [{action:'added'|'removed', number, name, slot, time}, ...] newest first
+  let freeHistory = [];
+  let jennyBalance = 0;
+  let jennyHistory = [];
+  let chooseTwoMode = false;
+  let chooseTwoOriginIndex = null;
+  let chooseTwoSelected = [];
+  const HISTORY_LIMIT = 100;
+
+  const specifiedGrid = document.getElementById('specified-grid');
+  const freeGrid = document.getElementById('free-grid');
+  const storeCountNum = document.getElementById('store-count-num');
+  const specifiedCountEl = document.getElementById('specified-count');
+  const freeCountEl = document.getElementById('free-count');
+  const toastRegion = document.getElementById('toast-region');
+  const saveStatusEl = document.getElementById('save-status');
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const panelSpecified = document.getElementById('panel-specified');
+  const panelFree = document.getElementById('panel-free');
+  const panelJenny = document.getElementById('panel-jenny');
+  const panelRandomItems = document.getElementById('panel-random-items');
+  const panelWands = document.getElementById('panel-wands');
+  const wandGrid = document.getElementById('wand-grid');
+  const specifiedHistoryEl = document.getElementById('specified-history');
+  const freeHistoryEl = document.getElementById('free-history');
+  const jennyHistoryEl = document.getElementById('jenny-history');
+  const packControlsEl = document.getElementById('pack-controls');
+  const jennyBalanceText = document.getElementById('jenny-balance-text');
+  const jennyTabText = document.getElementById('jenny-tab-text');
+  const jennyInput = document.getElementById('jenny-input');
+  const jennyAddBtn = document.getElementById('jenny-add-btn');
+  const jennyLoseBtn = document.getElementById('jenny-lose-btn');
+  const normalRewardBtn = document.getElementById('normal-reward-btn');
+  const rareRewardBtn = document.getElementById('rare-reward-btn');
+  const spellPackBtn = document.getElementById('spell-pack-btn');
+  const alchemyBtn = document.getElementById('alchemy-btn');
+  const modalRegion = (function(){
+    const d = document.createElement('div');
+    d.id = 'modal-region';
+    document.body.appendChild(d);
+    return d;
+  })();
+
+
+  function setActiveTab(tabName){
+    tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
+    panelSpecified.classList.toggle('active', tabName === 'specified');
+    panelFree.classList.toggle('active', tabName === 'free');
+    panelJenny.classList.toggle('active', tabName === 'jenny');
+    panelRandomItems.classList.toggle('active', tabName === 'random-items');
+    panelWands.classList.toggle('active', tabName === 'wands');
+  }
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+  });
+
+  const BOARD_KEY = 'board-state-p1';
+
+  /** ---------- persistence ---------- **/
+  let saveStatusTimer = null;
+  function setSaveStatus(text, isErr){
+    saveStatusEl.textContent = text;
+    saveStatusEl.classList.toggle('err', !!isErr);
+    if(saveStatusTimer) clearTimeout(saveStatusTimer);
+    if(!isErr && text){
+      saveStatusTimer = setTimeout(() => { saveStatusEl.textContent = '\u00A0'; }, 1800);
+    }
+  }
+
+  async function persistBoard(){
+    try{
+      localStorage.setItem(BOARD_KEY, JSON.stringify({
+        specified, free, specifiedHistory, freeHistory,
+        freeSlotCount, backpackUsed, enchantedUsed,
+        jennyBalance, jennyHistory, freeTowerFlags,
+        wands
+      }));
+      setSaveStatus('Saved', false);
+    } catch(err){
+      setSaveStatus('Save failed', true);
+      showToast('Could not save the board on this device/browser.', 'error');
+    }
+  }
+
+  /** ---------- toast ---------- **/
+  function showToast(message, type){
+    const el = document.createElement('div');
+    el.className = 'toast' + (type === 'success' ? ' success' : '');
+    el.textContent = message;
+    toastRegion.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+  function showInvalidInput(){ showToast('Invalid Input', 'error'); }
+
+  /** ---------- history log ---------- **/
+  function formatTime(iso){
+    const d = new Date(iso);
+    if(Number.isNaN(d.getTime())) return '';
+    return d.toLocaleString(undefined, { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+  }
+
+  function genHistoryId(){
+    return 'h_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function logHistory(panelType, action, card, slotIndex){
+    const entry = {
+      id: genHistoryId(),
+      action: action,                                   // 'added' | 'removed'
+      number: card.number,
+      name: card.name || 'Untitled Card',
+      slot: slotIndex,
+      time: new Date().toISOString(),
+    };
+    const list = panelType === 'specified' ? specifiedHistory : freeHistory;
+    list.unshift(entry);
+    if(list.length > HISTORY_LIMIT) list.length = HISTORY_LIMIT;
+    renderHistory(panelType);
+  }
+
+  function logPackUsedHistory(packType, card){
+    const entry = {
+      id: genHistoryId(),
+      action: packType === 'backpack' ? 'used-backpack' : 'used-enchanted',
+      number: card.number,
+      name: card.name || 'Untitled Card',
+      time: new Date().toISOString(),
+    };
+    freeHistory.unshift(entry);
+    if(freeHistory.length > HISTORY_LIMIT) freeHistory.length = HISTORY_LIMIT;
+    renderHistory('free');
+  }
+
+  function renderHistory(panelType){
+    const list = panelType === 'specified' ? specifiedHistory : freeHistory;
+    const el = panelType === 'specified' ? specifiedHistoryEl : freeHistoryEl;
+    el.innerHTML = '';
+    if(list.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'history-empty';
+      empty.textContent = 'No activity yet.';
+      el.appendChild(empty);
+      return;
+    }
+    list.forEach(entry => {
+      const isPackUsed = entry.action === 'used-backpack' || entry.action === 'used-enchanted';
+
+      const row = document.createElement('div');
+      row.className = 'history-row ' + entry.action;
+
+      const main = isPackUsed ? document.createElement('div') : row;
+      if(isPackUsed){
+        main.className = 'history-row-main';
+        row.appendChild(main);
+      }
+
+      const tag = document.createElement('span');
+      tag.className = 'history-tag';
+      tag.textContent = entry.action === 'added' ? 'Added'
+        : entry.action === 'removed' ? 'Removed'
+        : entry.action === 'used-backpack' ? 'Used Backpack'
+        : 'Used Enchanted Pack';
+      main.appendChild(tag);
+
+      const text = document.createElement('span');
+      text.className = 'history-text';
+      const numberPart = (entry.number === null || entry.number === undefined)
+        ? ''
+        : ' <span class="muted">(№ ' + entry.number + ')</span>';
+      text.innerHTML = '<strong>' + escapeHtml(entry.name) + '</strong>' + numberPart;
+      main.appendChild(text);
+
+      const time = document.createElement('span');
+      time.className = 'history-time';
+      time.textContent = formatTime(entry.time);
+      main.appendChild(time);
+
+      if(isPackUsed){
+        const undoBtn = document.createElement('button');
+        undoBtn.className = 'history-undo';
+        undoBtn.type = 'button';
+        undoBtn.textContent = entry.action === 'used-backpack' ? 'Undo Use Backpack' : 'Undo Use Enchanted Pack';
+        undoBtn.addEventListener('click', () => undoPackUse(entry.id));
+        row.appendChild(undoBtn);
+      }
+
+      el.appendChild(row);
+    });
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  /** ---------- Jenny (currency) ---------- **/
+  function formatJenny(amount){
+    const rounded = Math.round(amount * 100) / 100;
+    return 'J' + rounded.toLocaleString('en-US');
+  }
+
+  function updateJennyLabel(){
+    const label = formatJenny(jennyBalance);
+    jennyBalanceText.textContent = label;
+    jennyTabText.textContent = label;
+  }
+
+  function logJennyHistory(action, amount){
+    const entry = {
+      id: genHistoryId(),
+      action: action,        // 'increased' | 'decreased'
+      amount: amount,
+      time: new Date().toISOString(),
+    };
+    jennyHistory.unshift(entry);
+    if(jennyHistory.length > HISTORY_LIMIT) jennyHistory.length = HISTORY_LIMIT;
+    renderJennyHistory();
+  }
+
+  function renderJennyHistory(){
+    jennyHistoryEl.innerHTML = '';
+    if(jennyHistory.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'history-empty';
+      empty.textContent = 'No activity yet.';
+      jennyHistoryEl.appendChild(empty);
+      return;
+    }
+    jennyHistory.forEach(entry => {
+      const row = document.createElement('div');
+      row.className = 'history-row ' + entry.action;
+
+      const tag = document.createElement('span');
+      tag.className = 'history-tag';
+      tag.textContent = entry.action === 'increased' ? 'Increased' : 'Decreased';
+      row.appendChild(tag);
+
+      const text = document.createElement('span');
+      text.className = 'history-text';
+      const sign = entry.action === 'increased' ? '+' : '-';
+      text.innerHTML = '<strong>' + sign + formatJenny(entry.amount) + '</strong>';
+      row.appendChild(text);
+
+      const time = document.createElement('span');
+      time.className = 'history-time';
+      time.textContent = formatTime(entry.time);
+      row.appendChild(time);
+
+      jennyHistoryEl.appendChild(row);
+    });
+  }
+
+  function updateJennyButtons(){
+    const raw = jennyInput.value.trim();
+    const num = Number(raw);
+    const valid = raw !== '' && !Number.isNaN(num) && num > 0;
+    jennyAddBtn.disabled = !valid;
+    jennyLoseBtn.disabled = !valid;
+  }
+  jennyInput.addEventListener('input', updateJennyButtons);
+
+  jennyAddBtn.addEventListener('click', () => {
+    const num = Number(jennyInput.value.trim());
+    if(!(num > 0)) return;
+    jennyBalance += num;
+    logJennyHistory('increased', num);
+    updateJennyLabel();
+    jennyInput.value = '';
+    updateJennyButtons();
+    persistBoard();
+  });
+
+  jennyLoseBtn.addEventListener('click', () => {
+    const num = Number(jennyInput.value.trim());
+    if(!(num > 0)) return;
+    jennyBalance -= num;
+    logJennyHistory('decreased', num);
+    updateJennyLabel();
+    jennyInput.value = '';
+    updateJennyButtons();
+    persistBoard();
+  });
+
+  /** ---------- Card Rewards (treasure chest) ---------- **/
+  function closeModal(){ modalRegion.innerHTML = ''; }
+
+  // Rolls a card from a given rank -> weight table, restricted to ranks that
+  // actually have cards available (weights renormalized across those only).
+  function rollTieredCard(cards, tierWeights){
+    const byRank = {};
+    cards.forEach(card => {
+      const r = normalizeRank(card.rank);
+      if(tierWeights[r] === undefined) return;
+      if(!byRank[r]) byRank[r] = [];
+      byRank[r].push(card);
+    });
+
+    const availableTiers = Object.keys(tierWeights).filter(r => byRank[r] && byRank[r].length > 0);
+    if(availableTiers.length === 0) return null;
+
+    const totalWeight = availableTiers.reduce((sum, r) => sum + tierWeights[r], 0);
+    let roll = Math.random() * totalWeight;
+    let tier = availableTiers[availableTiers.length - 1];
+    for(const r of availableTiers){
+      if(roll < tierWeights[r]){ tier = r; break; }
+      roll -= tierWeights[r];
+    }
+    const candidates = byRank[tier];
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  }
+
+  // Normal Card Reward: 40% Rank C, 40% Rank B, 20% Rank A.
+  function rollNormalRewardCard(cards){
+    return rollTieredCard(cards, { C: 40, B: 40, A: 20 });
+  }
+
+  // Rare Card Reward: 50% Rank A, 35% Rank S, 15% Rank SS.
+  // If no Rank SS cards are available, that 15% is added onto Rank S instead.
+  function rollRareRewardCard(cards){
+    const hasSS = cards.some(c => normalizeRank(c.rank) === 'SS');
+    const weights = hasSS ? { A: 65, S: 25, SS: 10 } : { A: 65, S: 35 };
+    return rollTieredCard(cards, weights);
+  }
+
+  function buildChestScene(){
+    const scene = document.createElement('div');
+    scene.className = 'chest-scene';
+
+    const chest = document.createElement('div');
+    chest.className = 'chest';
+    const body = document.createElement('div');
+    body.className = 'chest-body';
+    const glow = document.createElement('div');
+    glow.className = 'chest-glow';
+    const lid = document.createElement('div');
+    lid.className = 'chest-lid';
+    chest.appendChild(body);
+    chest.appendChild(glow);
+    chest.appendChild(lid);
+    scene.appendChild(chest);
+
+    const caption = document.createElement('div');
+    caption.className = 'reward-caption';
+    caption.textContent = 'Opening…';
+    scene.appendChild(caption);
+
+    const resultWrap = document.createElement('div');
+    resultWrap.className = 'reward-result';
+    scene.appendChild(resultWrap);
+
+    return { scene, chest, caption, resultWrap };
+  }
+
+  function openRewardModal(cards, title){
+    const cardList = Array.isArray(cards) ? cards.filter(Boolean) : (cards ? [cards] : []);
+
+    modalRegion.innerHTML = '';
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
+
+    const box = document.createElement('div');
+    box.className = 'modal-box reward-box' + (cardList.length > 1 ? ' wide' : '');
+
+    const head = document.createElement('div');
+    head.className = 'modal-head';
+    const headText = document.createElement('div');
+    headText.innerHTML = '<h3>' + escapeHtml(title) + '</h3>';
+    head.appendChild(headText);
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'modal-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.textContent = '✕';
+    closeBtn.addEventListener('click', closeModal);
+    head.appendChild(closeBtn);
+    box.appendChild(head);
+
+    const { scene, chest, caption, resultWrap } = buildChestScene();
+    box.appendChild(scene);
+
+    backdrop.appendChild(box);
+    modalRegion.appendChild(backdrop);
+
+    requestAnimationFrame(() => { chest.classList.add('opening'); });
+
+    setTimeout(() => {
+      chest.remove();
+      caption.remove();
+
+      const label = document.createElement('div');
+      label.className = 'reward-caption';
+      label.textContent = cardList.length > 0 ? 'You found:' : 'Nothing found.';
+      resultWrap.appendChild(label);
+
+      if(cardList.length === 1){
+        resultWrap.appendChild(buildRewardCardPreview(cardList[0]));
+      } else if(cardList.length > 1){
+        resultWrap.classList.add('multi');
+        const grid = document.createElement('div');
+        grid.className = 'modal-results';
+        cardList.forEach(card => grid.appendChild(buildRewardCardPreview(card)));
+        resultWrap.appendChild(grid);
+      }
+      resultWrap.classList.add('show');
+    }, 1300);
+  }
+
+  function addRewardCardToFreeSlots(card){
+    const emptyIndex = free.findIndex(s => s === null);
+    if(emptyIndex === -1) return false;
+    free[emptyIndex] = card;
+    renderSlotFilled('free', emptyIndex, card);
+    updateCounts();
+    logHistory('free', 'added', card, emptyIndex);
+    renderPackControls();
+    persistBoard();
+    return true;
+  }
+
+  function openNormalReward(){
+    if(free.every(s => s !== null)){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    const storeCards = Object.values(cardStore);
+    if(storeCards.length === 0){
+      showToast('Import a card store before opening a reward.', 'error');
+      return;
+    }
+    const inRangeCards = storeCards.filter(c => c.number >= GENERAL_STORE_MIN && c.number <= GENERAL_STORE_MAX);
+    const card = rollNormalRewardCard(inRangeCards);
+    if(!card){
+      showToast('No Rank C, B, or A cards found in the ' + GENERAL_STORE_MIN + '–' + GENERAL_STORE_MAX + ' range.', 'error');
+      return;
+    }
+    if(!addRewardCardToFreeSlots(card)){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    openRewardModal(card, 'Normal Card Reward');
+  }
+
+  function openRareReward(){
+    if(free.every(s => s !== null)){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    const storeCards = Object.values(cardStore);
+    if(storeCards.length === 0){
+      showToast('Import a card store before opening a reward.', 'error');
+      return;
+    }
+    const inRangeCards = storeCards.filter(c => c.number >= GENERAL_STORE_MIN && c.number <= GENERAL_STORE_MAX);
+    const card = rollRareRewardCard(inRangeCards);
+    if(!card){
+      showToast('No Rank A or higher cards found in the ' + GENERAL_STORE_MIN + '–' + GENERAL_STORE_MAX + ' range.', 'error');
+      return;
+    }
+    if(!addRewardCardToFreeSlots(card)){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    openRewardModal(card, 'Rare Card Reward');
+  }
+
+  normalRewardBtn.addEventListener('click', openNormalReward);
+  rareRewardBtn.addEventListener('click', openRareReward);
+
+  // Selection weight per card, by rank, used for the Random Spell Pack draw.
+  // Blank/unrecognized ranks fall back to the same 1% weight as S/SS.
+  function weightForRank(rank){
+    const r = normalizeRank(rank);
+    if(r === 'C') return 5;
+    if(r === 'B') return 4;
+    if(r === 'A') return 3;
+    if(r === 'S') return 1;
+    if(r === 'SS') return 1;
+    return 1;
+  }
+
+  function buildWeightedPool(cards){
+    const pool = cards.map(card => ({ card, weight: weightForRank(card.rank) }));
+    const totalWeight = pool.reduce((sum, p) => sum + p.weight, 0);
+    return { pool, totalWeight };
+  }
+
+  function pickWeightedCard(pool, totalWeight){
+    let roll = Math.random() * totalWeight;
+    for(const p of pool){
+      if(roll < p.weight) return p.card;
+      roll -= p.weight;
+    }
+    return pool[pool.length - 1].card;
+  }
+
+  function openRandomPackModal(cards){
+    modalRegion.innerHTML = '';
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
+
+    const box = document.createElement('div');
+    box.className = 'modal-box wide';
+
+    const head = document.createElement('div');
+    head.className = 'modal-head';
+    const headText = document.createElement('div');
+    headText.innerHTML = '<h3>Random Pack Contents</h3>';
+    head.appendChild(headText);
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'modal-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.textContent = '✕';
+    closeBtn.addEventListener('click', closeModal);
+    head.appendChild(closeBtn);
+    box.appendChild(head);
+
+    const results = document.createElement('div');
+    results.className = 'modal-results';
+    cards.forEach(card => results.appendChild(buildRewardCardPreview(card)));
+    box.appendChild(results);
+
+    backdrop.appendChild(box);
+    modalRegion.appendChild(backdrop);
+  }
+
+  function openRandomSpellPack(){
+    const openSlots = free.filter(s => s === null).length;
+    if(openSlots < 3){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    const storeCards = Object.values(cardStore);
+    const rangeSpellCards = storeCards.filter(c =>
+      c.number >= SPELL_CARD_MIN && c.number <= SPELL_CARD_MAX && isSpellType(c.type)
+    );
+    const { pool, totalWeight } = buildWeightedPool(rangeSpellCards);
+    if(totalWeight === 0){
+      showToast('No Spell/Attack Spell cards found in the ' + SPELL_CARD_MIN + '–' + SPELL_CARD_MAX + ' range.', 'error');
+      return;
+    }
+
+    const cards = [];
+    for(let i = 0; i < 3; i++){ cards.push(pickWeightedCard(pool, totalWeight)); }
+
+    for(const card of cards){
+      if(!addRewardCardToFreeSlots(card)){
+        showToast('No room to hold any more cards.', 'error');
+        return;
+      }
+    }
+
+    openRandomPackModal(cards);
+  }
+
+  spellPackBtn.addEventListener('click', openRandomSpellPack);
+
+  function buildAlchemyPool(cards){
+    const pool = cards
+      .filter(c => c.number >= ALCHEMY_MIN && c.number <= ALCHEMY_MAX)
+      .map(card => ({ card, weight: card.number === ALCHEMY_PRIMARY_NUMBER ? ALCHEMY_PRIMARY_WEIGHT : 1 }));
+    const totalWeight = pool.reduce((sum, p) => sum + p.weight, 0);
+    return { pool, totalWeight };
+  }
+
+  function openAlchemyIngredient(){
+    if(free.every(s => s !== null)){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    const storeCards = Object.values(cardStore);
+    const { pool, totalWeight } = buildAlchemyPool(storeCards);
+    if(totalWeight === 0){
+      showToast('No cards found in the ' + ALCHEMY_MIN + '–' + ALCHEMY_MAX + ' range.', 'error');
+      return;
+    }
+
+    const rolledCards = [];
+
+    const firstCard = pickWeightedCard(pool, totalWeight);
+    if(!addRewardCardToFreeSlots(firstCard)){
+      showToast('No room to hold any more cards.', 'error');
+      return;
+    }
+    rolledCards.push(firstCard);
+
+    // 1/10 chance to roll again (and again, chained), only while space allows.
+    while(Math.random() < ALCHEMY_REROLL_CHANCE){
+      if(free.every(s => s !== null)) break;
+      const bonusCard = pickWeightedCard(pool, totalWeight);
+      if(!addRewardCardToFreeSlots(bonusCard)) break;
+      rolledCards.push(bonusCard);
+    }
+
+    openRewardModal(rolledCards, 'Alchemy Ingredient');
+  }
+
+  alchemyBtn.addEventListener('click', openAlchemyIngredient);
+
+  function normalizeRank(rank){
+    return (rank || '').toString().trim().toUpperCase();
+  }
+  function rankClass(rank){
+    const r = normalizeRank(rank);
+    if(r === 'C') return 'r-c';
+    if(r === 'B') return 'r-b';
+    if(r === 'A') return 'r-a';
+    if(r === 'S') return 'r-s';
+    if(r === 'SS') return 'r-ss';
+    return '';
+  }
+
+  function buildLimitRow(card){
+    const raw = (card.limit || '').toString().trim();
+    if(!raw || raw.toUpperCase() === 'X') return null;
+    const row = document.createElement('div');
+    row.className = 'card-limit';
+    row.textContent = 'Limit ' + raw;
+    return row;
+  }
+
+  function buildValueRow(card){
+    const raw = (card.value || '').toString().trim();
+    if(!raw || raw.toUpperCase() === 'X') return null;
+    const row = document.createElement('div');
+    row.className = 'card-value';
+    const coin = document.createElement('span');
+    coin.className = 'coin';
+    coin.textContent = 'J';
+    const num = document.createElement('span');
+    num.className = 'value-num';
+    num.textContent = raw;
+    row.appendChild(num);
+    row.appendChild(coin);
+    return row;
+  }
+
+  /** ---------- slot DOM builders ---------- **/
+  function buildEmptySlot(panelType, index){
+    const slot = document.createElement('div');
+    slot.className = 'slot is-empty';
+    slot.dataset.index = String(index);
+
+    if(panelType === 'specified'){
+      const badge = document.createElement('div');
+      badge.className = 'slot-badge';
+      badge.textContent = index;
+      slot.appendChild(badge);
+    } else {
+      const label = document.createElement('span');
+      label.className = 'slot-empty-label';
+      label.textContent = 'Open Slot';
+      slot.appendChild(label);
+    }
+
+    const controls = document.createElement('div');
+    controls.className = 'slot-controls';
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'slot-input';
+    input.placeholder = 'Card Number';
+    input.inputMode = 'numeric';
+
+    const btn = document.createElement('button');
+    btn.className = 'add-btn';
+    btn.type = 'button';
+    btn.textContent = 'Add Card';
+    btn.disabled = true;
+
+    input.addEventListener('input', () => {
+      const v = input.value.trim();
+      btn.disabled = (v === '' || Number.isNaN(Number(v)));
+    });
+
+    btn.addEventListener('click', () => {
+      const raw = input.value.trim();
+      if(raw === '') return;
+      if(panelType === 'specified'){
+        handleAddSpecified(raw, () => { input.value=''; btn.disabled = true; });
+      } else {
+        handleAddFree(raw, index, () => { input.value=''; btn.disabled = true; });
+      }
+    });
+
+    controls.appendChild(input);
+    controls.appendChild(btn);
+    slot.appendChild(controls);
+
+    if(panelType === 'free'){
+      if(freeTowerFlags[index]){
+        slot.appendChild(buildTowerBadge());
+      }
+      if(chooseTwoMode && !freeTowerFlags[index] && index !== chooseTwoOriginIndex){
+        const isSelected = chooseTwoSelected.includes(index);
+        const plusBtn = document.createElement('button');
+        plusBtn.type = 'button';
+        plusBtn.className = 'choose-plus-btn' + (isSelected ? ' selected' : '');
+        plusBtn.setAttribute('aria-label', isSelected ? 'Selected' : 'Choose this slot');
+        plusBtn.textContent = isSelected ? '✓' : '+';
+        if(isSelected){
+          plusBtn.disabled = true;
+        } else {
+          plusBtn.onclick = () => selectChooseTwoTarget(index);
+        }
+        slot.appendChild(plusBtn);
+      }
+    }
+
+    return slot;
+  }
+
+  function isSpellType(type){
+    return SPELL_TYPES.includes((type || '').toString().trim().toLowerCase());
+  }
+
+  function isSpellRewardCard(card){
+    if(!card) return false;
+    return isSpellType(card.type);
+  }
+
+  function isCard1027(card){
+    return !!card && card.number === CHOOSE_TWO_CARD_NUMBER;
+  }
+
+  function isWandCard(card){
+    return !!card && WAND_CARD_NUMBERS.includes(card.number);
+  }
+
+  function buildWandChargeRow(entry){
+    const current = entry.charges || 0;
+
+    const row = document.createElement('div');
+    row.className = 'wand-charges-row';
+
+    const minusBtn = document.createElement('button');
+    minusBtn.type = 'button';
+    minusBtn.className = 'wand-charge-btn minus';
+    minusBtn.textContent = '\u2212';
+    minusBtn.setAttribute('aria-label', 'Remove a charge');
+    minusBtn.disabled = current <= WAND_MIN_CHARGES;
+    minusBtn.onclick = () => adjustWandCharge(entry.id, -1);
+    row.appendChild(minusBtn);
+
+    const countEl = document.createElement('span');
+    countEl.className = 'wand-charge-count';
+    countEl.textContent = current + ' charge' + (current === 1 ? '' : 's');
+    row.appendChild(countEl);
+
+    const plusBtn = document.createElement('button');
+    plusBtn.type = 'button';
+    plusBtn.className = 'wand-charge-btn plus';
+    plusBtn.textContent = '+';
+    plusBtn.setAttribute('aria-label', 'Add a charge');
+    plusBtn.disabled = current >= WAND_MAX_CHARGES;
+    plusBtn.onclick = () => adjustWandCharge(entry.id, 1);
+    row.appendChild(plusBtn);
+
+    return row;
+  }
+
+  function updateWandChargeUI(id){
+    const cardEl = wandCardRefs[id];
+    const entry = wands.find(w => w.id === id);
+    if(!cardEl || !entry) return;
+    const current = entry.charges || 0;
+    const countEl = cardEl.querySelector('.wand-charge-count');
+    const minusBtn = cardEl.querySelector('.wand-charge-btn.minus');
+    const plusBtn = cardEl.querySelector('.wand-charge-btn.plus');
+    if(countEl) countEl.textContent = current + ' charge' + (current === 1 ? '' : 's');
+    if(minusBtn) minusBtn.disabled = current <= WAND_MIN_CHARGES;
+    if(plusBtn) plusBtn.disabled = current >= WAND_MAX_CHARGES;
+  }
+
+  function adjustWandCharge(id, delta){
+    const entry = wands.find(w => w.id === id);
+    if(!entry) return;
+    const current = entry.charges || 0;
+    const next = Math.min(WAND_MAX_CHARGES, Math.max(WAND_MIN_CHARGES, current + delta));
+    if(next === current) return;
+    entry.charges = next;
+    updateWandChargeUI(id);
+    persistBoard();
+  }
+
+  function removeWandInstance(id){
+    const idx = wands.findIndex(w => w.id === id);
+    if(idx === -1) return;
+    wands.splice(idx, 1);
+    delete wandCardRefs[id];
+    renderWandsGrid();
+    persistBoard();
+  }
+
+  function buildWandDisplayCard(entry){
+    // prefer the snapshot taken when the wand was moved here, so a later catalog
+    // update (renumbering/removing a card) can never make an in-play wand vanish
+    const card = entry.snapshot || cardStore[entry.number];
+    if(!card) return null;
+
+    const el = document.createElement('div');
+    el.className = 'slot is-filled wand-display-card';
+    if(isSpellRewardCard(card)) el.classList.add('type-spell');
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'card-remove';
+    removeBtn.type = 'button';
+    removeBtn.setAttribute('aria-label', 'Remove wand');
+    removeBtn.textContent = '\u2715';
+    removeBtn.addEventListener('click', () => removeWandInstance(entry.id));
+    el.appendChild(removeBtn);
+
+    populateCardFace(el, card);
+    el.appendChild(buildWandChargeRow(entry));
+    return el;
+  }
+
+  function renderWandsGrid(){
+    wandGrid.innerHTML = '';
+    wands.forEach(entry => {
+      const el = buildWandDisplayCard(entry);
+      if(!el) return; // card no longer exists in the catalog
+      wandCardRefs[entry.id] = el;
+      wandGrid.appendChild(el);
+    });
+  }
+
+  function addCardToWands(card){
+    const entry = { id: genHistoryId(), number: card.number, charges: 0, snapshot: card };
+    wands.push(entry);
+    renderWandsGrid();
+    persistBoard();
+  }
+
+  function useWandCard(index){
+    const card = free[index];
+    if(!card || !isWandCard(card)) return;
+
+    free[index] = null;
+    if(chooseTwoMode && chooseTwoOriginIndex === index){
+      chooseTwoMode = false;
+      chooseTwoOriginIndex = null;
+      chooseTwoSelected = [];
+    }
+    chooseTwoSelected = chooseTwoSelected.filter(i => i !== index);
+
+    const fresh = buildEmptySlot('free', index);
+    slotRefs.free[index].replaceWith(fresh);
+    slotRefs.free[index] = fresh;
+
+    updateCounts();
+    logHistory('free', 'removed', card, index);
+    renderPackControls();
+    syncChooseTwoUI();
+    persistBoard();
+
+    addCardToWands(card);
+  }
+
+  function buildTowerBadge(){
+    const badge = document.createElement('div');
+    badge.className = 'tower-badge';
+    badge.title = 'Tower';
+    badge.setAttribute('aria-label', 'Tower');
+    badge.innerHTML =
+      '<svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="5" y="9" width="14" height="12" fill="currentColor" stroke="#1d1912" stroke-width="0.9"/>' +
+        '<rect x="5" y="5" width="3" height="4.2" fill="currentColor" stroke="#1d1912" stroke-width="0.9"/>' +
+        '<rect x="10.5" y="5" width="3" height="4.2" fill="currentColor" stroke="#1d1912" stroke-width="0.9"/>' +
+        '<rect x="16" y="5" width="3" height="4.2" fill="currentColor" stroke="#1d1912" stroke-width="0.9"/>' +
+        '<rect x="10" y="15.5" width="4" height="5.5" fill="#1d1912" opacity="0.55"/>' +
+        '<rect x="8.8" y="11.2" width="2.3" height="2.3" fill="#1d1912" opacity="0.55"/>' +
+        '<rect x="12.9" y="11.2" width="2.3" height="2.3" fill="#1d1912" opacity="0.55"/>' +
+      '</svg>';
+    return badge;
+  }
+
+  // Re-renders every currently-occupied Free Slots card in place, so the
+  // Surgically syncs Choose 2 UI (the +/✓ buttons and each 1027 card's
+  // Choose 2/Cancel button) across the Free Slots grid, without rebuilding
+  // any existing card — avoids the whole-panel flicker of a full re-render.
+  function syncChooseTwoUI(){
+    freeGrid.querySelectorAll('.ability-btn').forEach(btn => {
+      const slotEl = btn.closest('.slot');
+      if(!slotEl) return;
+      const idx = Number(slotEl.dataset.index);
+      if(chooseTwoMode){
+        btn.className = 'ability-btn cancel';
+        btn.textContent = 'Cancel';
+        btn.onclick = cancelChooseTwo;
+      } else {
+        btn.className = 'ability-btn';
+        btn.textContent = 'Choose 2';
+        btn.onclick = () => startChooseTwo(idx);
+      }
+    });
+
+    for(let i = 0; i < freeSlotCount; i++){
+      const slotEl = slotRefs.free[i];
+      if(!slotEl) continue;
+      const card = free[i];
+      const eligible = chooseTwoMode && !freeTowerFlags[i] && i !== chooseTwoOriginIndex && !isCard1027(card);
+      let plusBtn = slotEl.querySelector('.choose-plus-btn');
+
+      if(!eligible){
+        if(plusBtn) plusBtn.remove();
+        continue;
+      }
+
+      const isSelected = chooseTwoSelected.includes(i);
+      if(!plusBtn){
+        plusBtn = document.createElement('button');
+        plusBtn.type = 'button';
+        slotEl.appendChild(plusBtn);
+      }
+      plusBtn.className = 'choose-plus-btn' + (isSelected ? ' selected' : '');
+      plusBtn.setAttribute('aria-label', isSelected ? 'Selected' : 'Choose this card');
+      plusBtn.textContent = isSelected ? '✓' : '+';
+      plusBtn.disabled = isSelected;
+      plusBtn.onclick = isSelected ? null : () => selectChooseTwoTarget(i);
+    }
+  }
+
+  function addTowerBadgeToSlot(index){
+    const slotEl = slotRefs.free[index];
+    if(!slotEl || slotEl.querySelector('.tower-badge')) return;
+    slotEl.appendChild(buildTowerBadge());
+  }
+
+  function startChooseTwo(originIndex){
+    chooseTwoMode = true;
+    chooseTwoOriginIndex = originIndex;
+    chooseTwoSelected = [];
+    syncChooseTwoUI();
+  }
+
+  function cancelChooseTwo(){
+    chooseTwoMode = false;
+    chooseTwoOriginIndex = null;
+    chooseTwoSelected = [];
+    syncChooseTwoUI();
+  }
+
+  function selectChooseTwoTarget(index){
+    if(!chooseTwoMode) return;
+    if(chooseTwoSelected.includes(index)) return;
+    chooseTwoSelected.push(index);
+
+    if(chooseTwoSelected.length < 2){
+      syncChooseTwoUI();
+      return;
+    }
+
+    // Both targets chosen: mark them permanently, then remove the used-up 1027 card.
+    const originIndex = chooseTwoOriginIndex;
+    const originCard = free[originIndex];
+
+    chooseTwoSelected.forEach(i => {
+      freeTowerFlags[i] = true;
+      addTowerBadgeToSlot(i);
+    });
+
+    free[originIndex] = null;
+    const freshOrigin = buildEmptySlot('free', originIndex);
+    slotRefs.free[originIndex].replaceWith(freshOrigin);
+    slotRefs.free[originIndex] = freshOrigin;
+    if(originCard){
+      logHistory('free', 'removed', originCard, originIndex);
+    }
+
+    chooseTwoMode = false;
+    chooseTwoOriginIndex = null;
+    chooseTwoSelected = [];
+
+    syncChooseTwoUI();
+    updateCounts();
+    renderPackControls();
+    persistBoard();
+    showToast('Tower icons added to 2 card slots.', 'success');
+  }
+
+  function populateCardFace(container, card){
+    const top = document.createElement('div');
+    top.className = 'card-top';
+
+    const numberTag = document.createElement('span');
+    numberTag.className = 'card-number-tag';
+    numberTag.textContent = (card.number === null || card.number === undefined) ? '№ —' : '№ ' + card.number;
+    top.appendChild(numberTag);
+
+    if(card.rank){
+      const rankChip = document.createElement('span');
+      rankChip.className = 'rank-chip ' + rankClass(card.rank);
+      rankChip.textContent = card.rank;
+      top.appendChild(rankChip);
+    }
+    container.appendChild(top);
+
+    const limitRow = buildLimitRow(card);
+    if(limitRow) container.appendChild(limitRow);
+
+    const name = document.createElement('div');
+    name.className = 'card-name';
+    name.textContent = card.name || 'Untitled Card';
+    container.appendChild(name);
+
+    if(card.type){
+      const meta = document.createElement('div');
+      meta.className = 'card-meta';
+      const chip = document.createElement('span');
+      chip.className = 'card-chip';
+      chip.textContent = card.type;
+      meta.appendChild(chip);
+      container.appendChild(meta);
+    }
+
+    const desc = document.createElement('div');
+    desc.className = 'card-desc';
+    desc.textContent = card.description || '';
+    container.appendChild(desc);
+
+    const valueRow = buildValueRow(card);
+    if(valueRow) container.appendChild(valueRow);
+  }
+
+  function buildFilledSlot(panelType, index, card){
+    const slot = document.createElement('div');
+    slot.className = 'slot is-filled';
+    slot.dataset.index = String(index);
+    if(isSpellRewardCard(card)){
+      slot.classList.add('type-spell');
+    }
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'card-remove';
+    removeBtn.type = 'button';
+    removeBtn.setAttribute('aria-label', 'Remove card');
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', () => {
+      let originWasCancelled = false;
+      if(panelType === 'specified'){
+        specified[index] = null;
+      } else {
+        free[index] = null;
+        if(chooseTwoMode && chooseTwoOriginIndex === index){
+          chooseTwoMode = false;
+          chooseTwoOriginIndex = null;
+          chooseTwoSelected = [];
+          originWasCancelled = true;
+        }
+        chooseTwoSelected = chooseTwoSelected.filter(i => i !== index);
+      }
+      const fresh = buildEmptySlot(panelType, index);
+      slot.replaceWith(fresh);
+      slotRefs[panelType][index] = fresh;
+      updateCounts();
+      logHistory(panelType, 'removed', card, index);
+      if(panelType === 'free'){
+        renderPackControls();
+        if(originWasCancelled){
+          syncChooseTwoUI();
+        }
+      }
+      persistBoard();
+    });
+    slot.appendChild(removeBtn);
+
+    populateCardFace(slot, card);
+
+    if(panelType === 'free'){
+      if(freeTowerFlags[index]){
+        slot.appendChild(buildTowerBadge());
+      }
+
+      if(isCard1027(card)){
+        const row = document.createElement('div');
+        row.className = 'card-ability-row';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        if(chooseTwoMode){
+          btn.className = 'ability-btn cancel';
+          btn.textContent = 'Cancel';
+          btn.onclick = cancelChooseTwo;
+        } else {
+          btn.className = 'ability-btn';
+          btn.textContent = 'Choose 2';
+          btn.onclick = () => startChooseTwo(index);
+        }
+        row.appendChild(btn);
+        slot.appendChild(row);
+      } else if(chooseTwoMode && !freeTowerFlags[index] && index !== chooseTwoOriginIndex){
+        const isSelected = chooseTwoSelected.includes(index);
+        const plusBtn = document.createElement('button');
+        plusBtn.type = 'button';
+        plusBtn.className = 'choose-plus-btn' + (isSelected ? ' selected' : '');
+        plusBtn.setAttribute('aria-label', isSelected ? 'Selected' : 'Choose this card');
+        plusBtn.textContent = isSelected ? '✓' : '+';
+        if(isSelected){
+          plusBtn.disabled = true;
+        } else {
+          plusBtn.onclick = () => selectChooseTwoTarget(index);
+        }
+        slot.appendChild(plusBtn);
+      }
+
+      if(isWandCard(card)){
+        const useRow = document.createElement('div');
+        useRow.className = 'card-ability-row';
+        const useBtn = document.createElement('button');
+        useBtn.type = 'button';
+        useBtn.className = 'ability-btn use-wand';
+        useBtn.textContent = 'Use';
+        useBtn.onclick = () => useWandCard(index);
+        useRow.appendChild(useBtn);
+        slot.appendChild(useRow);
+      }
+    }
+
+    return slot;
+  }
+
+  function buildRewardCardPreview(card){
+    const el = document.createElement('div');
+    el.className = 'slot is-filled reward-card-preview';
+    if(isSpellRewardCard(card)) el.classList.add('type-spell');
+    populateCardFace(el, card);
+    return el;
+  }
+
+  /** ---------- refs & init grids ---------- **/
+  const slotRefs = { specified: new Array(SPECIFIED_SLOT_COUNT), free: [] };
+
+  function initGrids(){
+    specifiedGrid.innerHTML = '';
+    freeGrid.innerHTML = '';
+    slotRefs.specified = new Array(SPECIFIED_SLOT_COUNT);
+    slotRefs.free = [];
+    for(let i=0;i<SPECIFIED_SLOT_COUNT;i++){
+      const s = buildEmptySlot('specified', i);
+      slotRefs.specified[i] = s;
+      specifiedGrid.appendChild(s);
+    }
+    for(let i=0;i<freeSlotCount;i++){
+      const f = buildEmptySlot('free', i);
+      slotRefs.free[i] = f;
+      freeGrid.appendChild(f);
+    }
+  }
+
+  function growFreeSlots(amount){
+    const start = freeSlotCount;
+    freeSlotCount += amount;
+    for(let i=start; i<freeSlotCount; i++){
+      free.push(null);
+      freeTowerFlags.push(false);
+      const el = buildEmptySlot('free', i);
+      slotRefs.free.push(el);
+      freeGrid.appendChild(el);
+    }
+  }
+
+  function renderSlotFilled(panelType, index, card){
+    const old = slotRefs[panelType][index];
+    const fresh = buildFilledSlot(panelType, index, card);
+    old.replaceWith(fresh);
+    slotRefs[panelType][index] = fresh;
+  }
+
+  function updateCounts(){
+    storeCountNum.textContent = Object.keys(cardStore).length;
+    specifiedCountEl.textContent = specified.filter(Boolean).length + ' / ' + SPECIFIED_SLOT_COUNT;
+    freeCountEl.textContent = free.filter(Boolean).length + ' / ' + freeSlotCount;
+  }
+
+  /** ---------- pack upgrades (Backpack / Enchanted Pack) ---------- **/
+  function cardNameMatches(card, targetName){
+    return !!card && (card.name || '').toString().trim().toLowerCase() === targetName.toLowerCase();
+  }
+
+  function renderPackControls(){
+    packControlsEl.innerHTML = '';
+
+    if(!backpackUsed && free.some(c => cardNameMatches(c, BACKPACK_CARD_NAME))){
+      const btn = document.createElement('button');
+      btn.className = 'pack-btn backpack';
+      btn.type = 'button';
+      btn.textContent = 'Use Backpack';
+      btn.addEventListener('click', () => usePack('backpack'));
+      packControlsEl.appendChild(btn);
+    }
+
+    if(!enchantedUsed && free.some(c => cardNameMatches(c, ENCHANTED_CARD_NAME))){
+      const btn = document.createElement('button');
+      btn.className = 'pack-btn enchanted';
+      btn.type = 'button';
+      btn.textContent = 'Use Enchanted Pack';
+      btn.addEventListener('click', () => usePack('enchanted'));
+      packControlsEl.appendChild(btn);
+    }
+  }
+
+  function usePack(packType){
+    const isBackpack = packType === 'backpack';
+    if(isBackpack && backpackUsed) return;
+    if(!isBackpack && enchantedUsed) return;
+
+    const targetName = isBackpack ? BACKPACK_CARD_NAME : ENCHANTED_CARD_NAME;
+    const idx = free.findIndex(c => cardNameMatches(c, targetName));
+    if(idx === -1) return;
+
+    const card = free[idx];
+    free[idx] = null;
+    const fresh = buildEmptySlot('free', idx);
+    slotRefs.free[idx].replaceWith(fresh);
+    slotRefs.free[idx] = fresh;
+
+    if(isBackpack){ backpackUsed = true; } else { enchantedUsed = true; }
+    growFreeSlots(PACK_BONUS);
+
+    logPackUsedHistory(isBackpack ? 'backpack' : 'enchanted', card);
+    updateCounts();
+    renderPackControls();
+    persistBoard();
+    showToast((isBackpack ? 'Backpack' : 'Enchanted Pack') + ' used — ' + PACK_BONUS + ' new Free Slots added.', 'success');
+  }
+
+  function undoPackUse(entryId){
+    const historyIdx = freeHistory.findIndex(e => e.id === entryId);
+    if(historyIdx === -1) return;
+    const entry = freeHistory[historyIdx];
+    const isBackpack = entry.action === 'used-backpack';
+    const cutoff = freeSlotCount - PACK_BONUS;
+
+    if(cutoff < BASE_FREE_SLOT_COUNT){
+      showToast('There would not be room in your Free Slots to undo this action.', 'error');
+      return;
+    }
+
+    const lastFive = free.slice(cutoff, freeSlotCount);
+    if(lastFive.some(c => c !== null)){
+      showToast('There are items in you last 5 slots that would be removed by this change.', 'error');
+      return;
+    }
+
+    const remaining = free.slice(0, cutoff);
+    const openIndex = remaining.indexOf(null);
+    if(openIndex === -1){
+      showToast('There would not be room in your Free Slots to undo this action.', 'error');
+      return;
+    }
+
+    // place the returned card back into the first open slot among the remaining slots
+    const card = cardStore[entry.number] || { number: entry.number, name: entry.name };
+    free[openIndex] = card;
+    renderSlotFilled('free', openIndex, card);
+
+    // strip the upgrade's 5 trailing slots
+    for(let i = freeSlotCount - 1; i >= cutoff; i--){
+      const el = slotRefs.free[i];
+      if(el && el.parentNode) el.parentNode.removeChild(el);
+    }
+    slotRefs.free.length = cutoff;
+    free.length = cutoff;
+    freeTowerFlags.length = cutoff;
+    freeSlotCount = cutoff;
+
+    if(isBackpack){ backpackUsed = false; } else { enchantedUsed = false; }
+
+    freeHistory.splice(historyIdx, 1);
+    renderHistory('free');
+    renderPackControls();
+    updateCounts();
+    persistBoard();
+    showToast((isBackpack ? 'Backpack' : 'Enchanted Pack') + ' use undone.', 'success');
+  }
+
+  /** ---------- add logic ---------- **/
+  function handleAddSpecified(rawValue, onSettled){
+    const num = parseInt(rawValue, 10);
+    if(Number.isNaN(num) || num < 0 || num >= SPECIFIED_SLOT_COUNT){ showInvalidInput(); return; }
+    const card = cardStore[num];
+    if(!card || specified[num] !== null){ showInvalidInput(); return; }
+    specified[num] = card;
+    renderSlotFilled('specified', num, card);
+    updateCounts();
+    logHistory('specified', 'added', card, num);
+    persistBoard();
+    onSettled();
+  }
+
+  function handleAddFree(rawValue, targetIndex, onSettled){
+    const num = parseInt(rawValue, 10);
+    if(Number.isNaN(num)){ showInvalidInput(); return; }
+    if(num === -1){
+      showInvalidInput();
+      failsafeRemovePackUpgrade('backpack');
+      return;
+    }
+    if(num === -2){
+      showInvalidInput();
+      failsafeRemovePackUpgrade('enchanted');
+      return;
+    }
+    if(num === -3){
+      showInvalidInput();
+      resetAllTowerIcons();
+      return;
+    }
+    const card = cardStore[num];
+    if(!card || free[targetIndex] !== null){ showInvalidInput(); return; }
+    free[targetIndex] = card;
+    renderSlotFilled('free', targetIndex, card);
+    updateCounts();
+    logHistory('free', 'added', card, targetIndex);
+    renderPackControls();
+    persistBoard();
+    onSettled();
+  }
+
+  // Failsafe: manually strip a pack's 5-slot Free Slots upgrade and clear its
+  // "used" flag, for cases where a pack was consumed (e.g. the extra slots are
+  // present) but no matching history record exists to Undo it normally.
+  function failsafeRemovePackUpgrade(packType){
+    const isBackpack = packType === 'backpack';
+    const isUsed = isBackpack ? backpackUsed : enchantedUsed;
+    if(!isUsed) return;
+
+    const cutoff = freeSlotCount - PACK_BONUS;
+    if(cutoff < BASE_FREE_SLOT_COUNT) return;
+
+    const lastFive = free.slice(cutoff, freeSlotCount);
+    if(lastFive.some(c => c !== null)){
+      showToast('There are items in you last 5 slots that would be removed by this change.', 'error');
+      return;
+    }
+
+    for(let i = freeSlotCount - 1; i >= cutoff; i--){
+      const el = slotRefs.free[i];
+      if(el && el.parentNode) el.parentNode.removeChild(el);
+    }
+    slotRefs.free.length = cutoff;
+    free.length = cutoff;
+    freeTowerFlags.length = cutoff;
+    freeSlotCount = cutoff;
+
+    if(isBackpack){ backpackUsed = false; } else { enchantedUsed = false; }
+
+    updateCounts();
+    renderPackControls();
+    persistBoard();
+    showToast((isBackpack ? 'Backpack' : 'Enchanted Pack') + ' upgrade removed.', 'success');
+  }
+
+  // Failsafe: strip the Tower icon from every Free Slot (occupied or empty)
+  // and cancel any in-progress Choose 2 selection.
+  function resetAllTowerIcons(){
+    if(freeTowerFlags.every(f => !f)) return;
+
+    freeTowerFlags = freeTowerFlags.map(() => false);
+    chooseTwoMode = false;
+    chooseTwoOriginIndex = null;
+    chooseTwoSelected = [];
+
+    freeGrid.querySelectorAll('.tower-badge').forEach(el => el.remove());
+    syncChooseTwoUI();
+
+    persistBoard();
+    showToast('All tower icons have been reset.', 'success');
+  }
+
+
+  /** ---------- boot: restore saved board (card store is baked in) ---------- **/
+  async function boot(){
+    let restoredSpecified = null;
+    let restoredFree = null;
+
+    try{
+      const boardRaw = localStorage.getItem(BOARD_KEY);
+      if(boardRaw){
+        const parsed = JSON.parse(boardRaw);
+        if(typeof parsed.freeSlotCount === 'number' && parsed.freeSlotCount >= BASE_FREE_SLOT_COUNT){
+          freeSlotCount = parsed.freeSlotCount;
+        }
+        backpackUsed = !!parsed.backpackUsed;
+        enchantedUsed = !!parsed.enchantedUsed;
+        const isValidCard = c => c && typeof c === 'object' && typeof c.number !== 'undefined';
+        if(Array.isArray(parsed.specified) && parsed.specified.length === SPECIFIED_SLOT_COUNT){
+          restoredSpecified = parsed.specified.map(c => isValidCard(c) ? c : null);
+        }
+        if(Array.isArray(parsed.free) && parsed.free.length === freeSlotCount){
+          restoredFree = parsed.free.map(c => isValidCard(c) ? c : null);
+        }
+        if(Array.isArray(parsed.freeTowerFlags) && parsed.freeTowerFlags.length === freeSlotCount){
+          freeTowerFlags = parsed.freeTowerFlags.map(f => !!f);
+        }
+        if(Array.isArray(parsed.wands)){
+          const clampCharge = n => Math.min(WAND_MAX_CHARGES, Math.max(WAND_MIN_CHARGES, Number(n) || 0));
+          wands = parsed.wands
+            .filter(w => w && typeof w === 'object' && typeof w.number !== 'undefined')
+            .map(w => ({
+              id: (typeof w.id === 'string' && w.id) ? w.id : genHistoryId(),
+              number: w.number,
+              charges: clampCharge(w.charges),
+              snapshot: (w.snapshot && typeof w.snapshot === 'object') ? w.snapshot : undefined,
+            }));
+        }
+        if(Array.isArray(parsed.specifiedHistory)) specifiedHistory = parsed.specifiedHistory;
+        if(Array.isArray(parsed.freeHistory)) freeHistory = parsed.freeHistory;
+        if(typeof parsed.jennyBalance === 'number' && !Number.isNaN(parsed.jennyBalance)){
+          jennyBalance = parsed.jennyBalance;
+        }
+        if(Array.isArray(parsed.jennyHistory)) jennyHistory = parsed.jennyHistory;
+      }
+    } catch(err){
+      // no saved board yet, or storage unavailable — start empty
+    }
+
+    // one-time backfill: if a pack was already used before this history feature
+    // existed, add a record for it now so it shows up (and can still be undone).
+    let migrated = false;
+    if(backpackUsed && !freeHistory.some(e => e.action === 'used-backpack')){
+      const knownBackpack = Object.values(cardStore).find(c => cardNameMatches(c, BACKPACK_CARD_NAME));
+      freeHistory.push({
+        id: genHistoryId(),
+        action: 'used-backpack',
+        number: knownBackpack ? knownBackpack.number : null,
+        name: (knownBackpack && knownBackpack.name) || BACKPACK_CARD_NAME,
+        time: new Date().toISOString(),
+      });
+      migrated = true;
+    }
+    if(enchantedUsed && !freeHistory.some(e => e.action === 'used-enchanted')){
+      const knownEnchanted = Object.values(cardStore).find(c => cardNameMatches(c, ENCHANTED_CARD_NAME));
+      freeHistory.push({
+        id: genHistoryId(),
+        action: 'used-enchanted',
+        number: knownEnchanted ? knownEnchanted.number : null,
+        name: (knownEnchanted && knownEnchanted.name) || ENCHANTED_CARD_NAME,
+        time: new Date().toISOString(),
+      });
+      migrated = true;
+    }
+
+    free = new Array(freeSlotCount).fill(null);
+    if(freeTowerFlags.length !== freeSlotCount){
+      freeTowerFlags = new Array(freeSlotCount).fill(false);
+    }
+    initGrids();
+
+    if(restoredSpecified){
+      specified = restoredSpecified;
+      specified.forEach((card, i) => {
+        if(!card) return;
+        try{
+          renderSlotFilled('specified', i, card);
+        } catch(err){
+          specified[i] = null; // corrupted entry — clear it so the slot isn't falsely marked occupied
+        }
+      });
+    }
+    if(restoredFree){
+      free = restoredFree;
+      free.forEach((card, i) => {
+        if(!card) return;
+        try{
+          renderSlotFilled('free', i, card);
+        } catch(err){
+          free[i] = null; // corrupted entry — clear it so the slot isn't falsely marked occupied
+        }
+      });
+    }
+
+    renderPackControls();
+    renderHistory('specified');
+    renderHistory('free');
+    updateJennyLabel();
+    renderJennyHistory();
+    updateJennyButtons();
+    updateCounts();
+    renderWandsGrid();
+    if(migrated){
+      persistBoard();
+    }
+  }
+
+  boot();
+})();
+</script>
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>

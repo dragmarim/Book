@@ -1,0 +1,24 @@
+{
+  "name": "Book \u2014 Player 2",
+  "short_name": "Book P2",
+  "description": "Card Vault session tracker",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#12151a",
+  "theme_color": "#12151a",
+  "icons": [
+    {
+      "src": "../icons/icon-192-p2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../icons/icon-512-p2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
