@@ -10,7 +10,7 @@ import json
 
 ROOT = os.path.dirname(__file__)
 TEMPLATE_PATH = os.path.join(ROOT, "template.html")
-BUILD_DIR = os.path.join(ROOT, "build")
+BUILD_DIR = os.path.dirname(ROOT) if os.path.basename(ROOT) == 'src' else os.path.join(ROOT, 'build')
 VERSION_FILE = os.path.join(ROOT, "VERSION")
 
 PLAYERS = [1, 2, 3, 4]
