@@ -1,5 +1,5 @@
 // Auto-generated — do not edit by hand, see generate_site.py
-const CACHE_NAME = 'cardvault-p1-v4';
+const CACHE_NAME = 'cardvault-p1-v5';
 const PRECACHE = [
   './',
   './index.html',
